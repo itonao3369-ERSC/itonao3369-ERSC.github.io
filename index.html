@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エスエス技研株式会社 | 放射線測定・防護の専門家</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:    #0d2340;
+      --navy-mid:#14335c;
+      --teal:    #1a7a8a;
+      --teal-lt: #22a0b4;
+      --gold:    #c8993c;
+      --offwhite:#f4f6f8;
+      --white:   #ffffff;
+      --gray-lt: #e8ecf0;
+      --gray:    #8a9bb0;
+      --text:    #1e2d3d;
+      --text-sm: #4a5d72;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Noto Sans JP', sans-serif; color: var(--text); background: var(--white); line-height: 1.7; }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(13,35,64,0.97); backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0 5%; display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .logo img { width: 38px; height: 38px; object-fit: contain; filter: invert(1) brightness(2); }
+    .logo-text .en { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 0.12em; opacity: 0.65; color: white; display: block; }
+    .logo-text .ja { font-size: 15px; font-weight: 500; color: white; display: block; }
+    nav { display: flex; gap: 28px; align-items: center; }
+    nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; transition: color .2s; }
+    nav a:hover { color: var(--teal-lt); }
+    nav .cta-nav { background: var(--teal); color: white; padding: 8px 20px; border-radius: 4px; font-size: 13px; font-weight: 500; transition: background .2s; }
+    nav .cta-nav:hover { background: var(--teal-lt); color: white; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background-color: #0d2340;
+      background-image:
+        radial-gradient(ellipse 70% 60% at 110% 50%, rgba(26,122,138,0.22) 0%, transparent 60%),
+        linear-gradient(160deg, #0d2340 0%, #14335c 100%);
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; padding: 120px 5% 80px;
+      position: relative; overflow: visible; gap: 40px;
+    }
+    .hero-content {
+      max-width: 580px; position: relative; z-index: 2;
+      background: rgba(10,28,52,0.72); backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px); border-radius: 12px;
+      padding: 40px 44px; border: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal-lt); margin-bottom: 20px;
+    }
+    .hero-title {
+      font-family: 'Noto Serif JP', serif; font-size: clamp(28px, 4vw, 46px);
+      font-weight: 600; line-height: 1.4; color: white; margin-bottom: 24px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .hero-title span { color: var(--teal-lt); }
+    .hero-body {
+      font-size: 15px; color: rgba(255,255,255,0.88); line-height: 1.85;
+      margin-bottom: 40px; font-weight: 300; text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary { background: var(--teal); color: white; text-decoration: none; padding: 13px 30px; border-radius: 4px; font-size: 14px; font-weight: 500; transition: background .2s, transform .15s; display: inline-block; }
+    .btn-primary:hover { background: var(--teal-lt); transform: translateY(-1px); }
+    .btn-outline { border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.85); text-decoration: none; padding: 13px 30px; border-radius: 4px; font-size: 14px; font-weight: 400; transition: border-color .2s, color .2s; display: inline-block; }
+    .btn-outline:hover { border-color: var(--teal-lt); color: var(--teal-lt); }
+
+    /* wave rings */
+    .wave-rings { position: relative; width: 100%; aspect-ratio: 1; max-width: 480px; justify-self: center; pointer-events: none; z-index: 0; }
+    .ring { position: absolute; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
+    .ring:nth-child(1){ width: 80px;  height: 80px;  border: 1px solid rgba(34,160,180,0.8); animation-delay: 0s; }
+    .ring:nth-child(2){ width: 160px; height: 160px; border: 1px solid rgba(34,160,180,0.5); animation-delay: 0.5s; }
+    .ring:nth-child(3){ width: 260px; height: 260px; border: 1px solid rgba(26,122,138,0.35); animation-delay: 1s; }
+    .ring:nth-child(4){ width: 380px; height: 380px; border: 1px solid rgba(26,122,138,0.2);  animation-delay: 1.5s; }
+    .ring:nth-child(5){ width: 480px; height: 480px; border: 1px solid rgba(26,122,138,0.1);  animation-delay: 2s; }
+    .ring-dot { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 12px; height: 12px; border-radius: 50%; background: var(--teal-lt); box-shadow: 0 0 20px var(--teal-lt), 0 0 40px rgba(34,160,180,0.4); }
+    @keyframes pulse { 0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.03)} }
+
+    /* ── SECTION BASE ── */
+    section { padding: 90px 5%; }
+    .section-label { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 12px; }
+    .section-title { font-family: 'Noto Serif JP', serif; font-size: clamp(22px, 3vw, 32px); font-weight: 600; color: var(--navy); line-height: 1.4; margin-bottom: 16px; }
+    .section-body { font-size: 15px; color: var(--text-sm); max-width: 600px; line-height: 1.85; }
+
+    /* ── SERVICES 3カラム ── */
+    #services { background: var(--offwhite); }
+    .services-3col {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 28px; margin-top: 52px;
+    }
+    .service-pillar {
+      background: white; border-radius: 12px;
+      border: 1px solid var(--gray-lt); overflow: hidden;
+      box-shadow: 0 2px 12px rgba(13,35,64,0.06);
+    }
+    .pillar-header {
+      padding: 28px 26px 22px;
+      position: relative;
+    }
+    .pillar-header.color-blue  { background: linear-gradient(135deg, #1a4a8a, #2a6aaa); }
+    .pillar-header.color-teal  { background: linear-gradient(135deg, #1a6a7a, #2a8a9a); }
+    .pillar-header.color-gold  { background: linear-gradient(135deg, #8a5a10, #b07820); }
+    .pillar-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+    .pillar-header h3 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 600; color: white; margin-bottom: 6px; }
+    .pillar-header p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.7; }
+
+    .pillar-body { padding: 22px 26px 28px; }
+    .pillar-items { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .pillar-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 0; border-bottom: 1px solid var(--gray-lt);
+    }
+    .pillar-item:last-child { border-bottom: none; }
+    .item-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--teal); color: white;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .item-num.sq { border-radius: 5px; background: var(--navy); font-size: 11px; }
+    .item-content h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .item-content p  { font-size: 13px; color: var(--text-sm); line-height: 1.7; }
+
+    .pillar-footer {
+      padding: 14px 26px; border-top: 1px solid var(--gray-lt);
+      background: var(--offwhite); font-size: 12px; color: var(--text-sm);
+    }
+    .pillar-footer strong { color: var(--navy); }
+
+    /* 対応施設バッジ */
+    .facility-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 52px; justify-content: center; }
+    .facility-badge {
+      background: white; border: 1px solid var(--gray-lt); border-radius: 999px;
+      padding: 8px 20px; font-size: 13px; color: var(--text-sm);
+      display: flex; align-items: center; gap: 7px;
+      box-shadow: 0 2px 6px rgba(13,35,64,0.06);
+    }
+    .facility-badge .fi { font-size: 18px; }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 52px; }
+    .about-table { width: 100%; border-collapse: collapse; }
+    .about-table tr { border-bottom: 1px solid var(--gray-lt); }
+    .about-table td { padding: 14px 0; font-size: 14px; vertical-align: top; }
+    .about-table td:first-child { color: var(--gray); width: 120px; font-weight: 500; }
+    .about-message { background: var(--navy); border-radius: 8px; padding: 36px 32px; }
+    .about-message blockquote { font-family: 'Noto Serif JP', serif; font-size: 16px; color: rgba(255,255,255,0.9); line-height: 2; }
+    .about-message cite { display: block; margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.5); font-style: normal; }
+
+    /* ── CONTACT ── */
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: 60px; align-items: start; }
+    .contact-info h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+    .contact-info p { font-size: 14px; color: var(--text-sm); line-height: 1.9; }
+    .contact-detail { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
+    .contact-detail-item { display: flex; gap: 12px; align-items: flex-start; }
+    .contact-detail-item .ic { width: 32px; height: 32px; border-radius: 6px; background: rgba(26,122,138,0.1); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .contact-detail-item div { font-size: 13px; color: var(--text-sm); }
+    .contact-detail-item div strong { display: block; color: var(--navy); font-size: 14px; margin-bottom: 2px; }
+    .contact-form { background: white; border: 1px solid var(--gray-lt); border-radius: 10px; padding: 40px 36px; }
+    .contact-form h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 28px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 7px; }
+    .form-group label .req { color: var(--teal); margin-left: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; border: 1px solid #d0dae4; border-radius: 5px; padding: 11px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; color: var(--text); background: #fafbfc; transition: border-color .2s, box-shadow .2s; outline: none; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(26,122,138,0.12); background: white; }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+    .form-group select { appearance: none; cursor: pointer; }
+    .form-submit { width: 100%; background: var(--navy); color: white; border: none; padding: 14px; border-radius: 5px; font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background .2s; }
+    .form-submit:hover { background: var(--teal); }
+    .form-note { font-size: 12px; color: var(--gray); text-align: center; margin-top: 12px; line-height: 1.7; }
+
+    /* toast */
+    #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--teal); color: white; padding: 14px 28px; border-radius: 6px; font-size: 14px; font-weight: 500; box-shadow: 0 6px 24px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; z-index: 200; }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--navy); padding: 56px 5% 28px; color: rgba(255,255,255,0.6); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 28px; }
+    .footer-brand p { font-size: 13px; line-height: 1.85; margin-top: 14px; color: rgba(255,255,255,0.5); }
+    footer h4 { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: 10px; }
+    footer ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color .2s; }
+    footer ul li a:hover { color: var(--teal-lt); }
+    .footer-copy { font-size: 12px; text-align: center; color: rgba(255,255,255,0.3); }
+    .footer-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .footer-logo img { width: 36px; height: 36px; object-fit: contain; filter: invert(1) brightness(2); opacity: 0.8; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .services-3col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      header { padding: 0 4%; }
+      nav a:not(.cta-nav) { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 100px; overflow: hidden; }
+      .wave-rings { max-width: 280px; opacity: 0.6; }
+      .about-grid, .contact-wrap { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .contact-form { padding: 28px 22px; }
+      .hero-content { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#top">
+    <img src="logo.png" alt="エスエス技研ロゴ">
+    <div class="logo-text">
+      <span class="en">SS GIKEN Co., Ltd.</span>
+      <span class="ja">エスエス技研株式会社</span>
+    </div>
+  </a>
+  <nav>
+    <a href="#services">事業内容</a>
+    <a href="products.html">開発システム</a>
+    <a href="#about">会社概要</a>
+    <a href="#contact" class="cta-nav">お問い合わせ</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section id="top" class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="d-eyebrow">Radiation Measurement &amp; Protection</p>
+    <h1 class="hero-title" id="d-hero-title">
+      放射線から<br>
+      <span>守る技術</span>と<br>
+      <span>正確な測定</span>を。
+    </h1>
+    <p class="hero-body" id="d-hero-body">
+      エスエス技研株式会社は、放射線測定・管理・報告業務の専門会社として、
+      医療機関・研究施設・産業施設の放射線安全を長年にわたりサポートしてきました。
+      確かな技術と誠実な対応で、お客様の安全管理を支えます。
+    </p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary" id="d-btn-primary">事業内容を見る</a>
+      <a href="#contact" class="btn-outline" id="d-btn-outline">お問い合わせ</a>
+    </div>
+  </div>
+  <div class="wave-rings" aria-hidden="true">
+    <div class="ring-dot"></div>
+    <div class="ring"></div><div class="ring"></div>
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-label">Services</p>
+  <h2 class="section-title">事業内容</h2>
+  <p class="section-body">放射線測定から施設管理・コンサルティングまで、放射線安全に関わるあらゆる業務をワンストップでサポートします。</p>
+
+  <div class="services-3col">
+
+    <!-- 作業環境測定 -->
+    <div class="service-pillar">
+      <div class="pillar-header color-blue">
+        <span class="pillar-icon">🔬</span>
+        <h3>作業環境測定</h3>
+        <p>放射線施設の安全管理を支える各種測定を実施します。</p>
+      </div>
+      <div class="pillar-body">
+        <ul class="pillar-items">
+          <li class="pillar-item">
+            <div class="item-num">1</div>
+            <div class="item-content">
+              <h4>RI表面汚染測定（スミア法）</h4>
+              <p>作業台や機器表面の放射性物質の付着状況を測定します。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num">2</div>
+            <div class="item-content">
+              <h4>RI空気中濃度測定（エアサンプラー）</h4>
+              <p>空気中の放射性物質濃度を測定し、作業環境を評価します。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num">3</div>
+            <div class="item-content">
+              <h4>排水中濃度測定</h4>
+              <p>RI施設からの排水に含まれる放射性物質の濃度を測定します。</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="pillar-footer">
+        <strong>対応施設：</strong>医療機関・研究施設・教育機関・RI取扱事業所
+      </div>
+    </div>
+
+    <!-- 漏洩線量測定 -->
+    <div class="service-pillar">
+      <div class="pillar-header color-teal">
+        <span class="pillar-icon">📡</span>
+        <h3>漏洩線量測定</h3>
+        <p>各種放射線装置の漏洩線量を測定し、施設の安全を確認します。</p>
+      </div>
+      <div class="pillar-body">
+        <ul class="pillar-items">
+          <li class="pillar-item">
+            <div class="item-num sq">X線</div>
+            <div class="item-content">
+              <h4>X線診察室</h4>
+              <p>X線装置からの漏洩線量を測定し、遮蔽性能の確認を行います。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num sq">CT</div>
+            <div class="item-content">
+              <h4>CT室</h4>
+              <p>CT装置周辺の漏洩線量を測定し、管理区域の安全を確認します。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num sq">IVR</div>
+            <div class="item-content">
+              <h4>血管撮影室（IVR室）</h4>
+              <p>透視・撮影中の漏洩線量を測定し、作業者や周辺環境の安全を確認します。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num sq">RT</div>
+            <div class="item-content">
+              <h4>放射線治療室</h4>
+              <p>治療装置からの漏洩線量を測定し、遮蔽やインターロック等の安全性を確認します。</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="pillar-footer">
+        測定結果をもとに<strong>適切な評価・ご提案</strong>をいたします。
+      </div>
+    </div>
+
+    <!-- 施設管理・コンサルティング -->
+    <div class="service-pillar">
+      <div class="pillar-header color-gold">
+        <span class="pillar-icon">🏗️</span>
+        <h3>施設管理・コンサルティング</h3>
+        <p>設計から運用、廃止までトータルでサポートします。</p>
+      </div>
+      <div class="pillar-body">
+        <ul class="pillar-items">
+          <li class="pillar-item">
+            <div class="item-num" style="background:var(--gold)">🔧</div>
+            <div class="item-content">
+              <h4>RI施設の設備点検</h4>
+              <p>放射線監視モニタ、排気・排水設備の定期点検を行います。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num" style="background:var(--gold)">📐</div>
+            <div class="item-content">
+              <h4>RI施設の設計コンサルタント</h4>
+              <p>各種申請書類の作成、施設設計を支援します。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num" style="background:var(--gold)">👥</div>
+            <div class="item-content">
+              <h4>RI施設の受託管理</h4>
+              <p>専任従事者が不在の事業所様を対象に、RI管理業務を受託します。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num" style="background:var(--gold)">🧮</div>
+            <div class="item-content">
+              <h4>遮蔽・換気・排水計算</h4>
+              <p>放射線施設の遮蔽計算、換気計算、排水計算を行います。</p>
+            </div>
+          </li>
+          <li class="pillar-item">
+            <div class="item-num" style="background:var(--gold)">♻️</div>
+            <div class="item-content">
+              <h4>除染・廃止措置</h4>
+              <p>施設の解体・廃止に伴う除染および廃棄物処理まで対応します。</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="pillar-footer">
+        <strong>安全・確実な管理で、環境保全に貢献します。</strong>
+      </div>
+    </div>
+
+  </div><!-- /services-3col -->
+
+  <!-- 対応施設 -->
+  <div class="facility-badges">
+    <div class="facility-badge"><span class="fi">🏥</span>医療機関（病院・クリニック）</div>
+    <div class="facility-badge"><span class="fi">🔬</span>研究施設</div>
+    <div class="facility-badge"><span class="fi">🎓</span>教育機関（大学・専門学校）</div>
+    <div class="facility-badge"><span class="fi">🏭</span>RI取扱事業所</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">About</p>
+  <h2 class="section-title">会社概要</h2>
+  <div class="about-grid">
+    <div>
+      <table class="about-table">
+        <tr><td>会社名</td><td id="d-name">エスエス技研株式会社</td></tr>
+        <tr><td>英文名</td><td id="d-name-en">SS Giken Co., Ltd.</td></tr>
+        <tr><td>所在地</td><td id="d-address">〒（郵便番号）<br>（住所）</td></tr>
+        <tr><td>電話</td><td id="d-tel">（電話番号）</td></tr>
+        <tr><td>FAX</td><td id="d-fax">（FAX番号）</td></tr>
+        <tr><td>事業内容</td><td>放射線測定業、放射線管理業務、<br>放射線防護コンサルティング</td></tr>
+        <tr><td>対応地域</td><td>全国（出張対応可）</td></tr>
+        <tr><td>資格・登録</td><td>作業環境測定機関登録<br>放射線取扱主任者（第1種）在籍</td></tr>
+      </table>
+    </div>
+    <div class="about-message">
+      <blockquote id="d-message">
+        放射線は、医療や産業において欠かせない存在です。
+        しかしその恩恵を安全に享受するためには、
+        正確な測定と誠実な管理が不可欠です。
+        私たちエスエス技研は、専門知識と最新機器をもって、
+        お客様の放射線安全を誠実に守り続けます。
+      </blockquote>
+      <cite id="d-message-author">— 代表取締役</cite>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="background:var(--offwhite)">
+  <p class="section-label">Contact</p>
+  <h2 class="section-title">お問い合わせ</h2>
+  <p class="section-body" style="margin-bottom:48px">測定のご依頼・お見積り・ご相談など、お気軽にご連絡ください。通常2営業日以内にご返答いたします。</p>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <h3>お気軽にご相談ください</h3>
+      <p>放射線測定・管理に関するご質問、定期測定のご依頼、新規施設設置に伴うご相談など、どんな小さなことでもお問い合わせいただけます。</p>
+      <div class="contact-detail">
+        <div class="contact-detail-item">
+          <div class="ic">📞</div>
+          <div><strong>お電話でのお問い合わせ</strong><span id="d-tel2">（電話番号）</span><br><span id="d-hours">平日 9:00〜18:00</span></div>
+        </div>
+        <div class="contact-detail-item">
+          <div class="ic">📠</div>
+          <div><strong>FAX</strong><span id="d-fax2">（FAX番号）</span><br>24時間受付</div>
+        </div>
+        <div class="contact-detail-item">
+          <div class="ic">📍</div>
+          <div><strong>所在地</strong><span id="d-address2">（住所）</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3>✉️ メールフォーム</h3>
+      <div class="form-row">
+        <div class="form-group"><label>お名前<span class="req">*</span></label><input type="text" id="f-name" placeholder="山田 太郎"></div>
+        <div class="form-group"><label>会社・施設名</label><input type="text" id="f-org" placeholder="〇〇病院"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>電話番号</label><input type="tel" id="f-tel" placeholder="03-XXXX-XXXX"></div>
+        <div class="form-group"><label>メールアドレス<span class="req">*</span></label><input type="email" id="f-email" placeholder="info@example.co.jp"></div>
+      </div>
+      <div class="form-group">
+        <label>お問い合わせ種別<span class="req">*</span></label>
+        <select id="f-type">
+          <option value="">選択してください</option>
+          <option>作業環境測定のご依頼</option>
+          <option>漏洩線量測定のご依頼</option>
+          <option>施設管理・コンサルティングのご相談</option>
+          <option>放射線ソフトウェアについて</option>
+          <option>お見積りのご依頼</option>
+          <option>その他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>お問い合わせ内容<span class="req">*</span></label>
+        <textarea id="f-body" placeholder="ご依頼内容・施設の種別・測定の頻度など、詳しくお聞かせください。"></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">送信する →</button>
+      <p class="form-note">※ご記入いただいた個人情報は、お問い合わせへの回答のみに使用し、第三者への提供は一切行いません。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="logo.png" alt="エスエス技研ロゴ">
+        <div class="logo-text">
+          <span class="en" style="color:rgba(255,255,255,0.5)">SS GIKEN Co., Ltd.</span>
+          <span class="ja" style="color:white">エスエス技研株式会社</span>
+        </div>
+      </div>
+      <p>放射線測定・防護の専門家として、<br>安全な環境づくりをサポートします。</p>
+    </div>
+    <div>
+      <h4>事業内容</h4>
+      <ul>
+        <li><a href="#services">作業環境測定</a></li>
+        <li><a href="#services">漏洩線量測定</a></li>
+        <li><a href="#services">施設管理・コンサルティング</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>会社情報</h4>
+      <ul>
+        <li><a href="#about">会社概要</a></li>
+        <li><a href="products.html">開発システム</a></li>
+        <li><a href="#contact">お問い合わせ</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-copy">© 2025 エスエス技研株式会社 All Rights Reserved.</p>
+</footer>
+
+<div id="toast">✔ 送信が完了しました。2営業日以内にご連絡いたします。</div>
+
+<script>
+  // ── site_data.json からコンテンツを反映 ──
+  (async () => {
+    try {
+      const res = await fetch('/api/data');
+      if (!res.ok) return;
+      const d = await res.json();
+      const c = d.company, h = d.hero;
+      const setT = (id, v) => { const el = document.getElementById(id); if(el && v) el.textContent = v; };
+      setT('d-eyebrow', h.eyebrow);
+      setT('d-hero-body', h.body);
+      setT('d-btn-primary', h.btn_primary);
+      setT('d-btn-outline', h.btn_outline);
+      if (h.title_line1 || h.title_line2 || h.title_line3) {
+        document.getElementById('d-hero-title').innerHTML =
+          `${h.title_line1||''}<br><span>${h.title_line2||''}</span>${h.title_line3?'<br><span>'+h.title_line3+'</span>':''}`;
+      }
+      setT('d-name', c.name);
+      setT('d-name-en', c.name_en);
+      if (c.zip || c.address)
+        document.getElementById('d-address').innerHTML = `〒${c.zip||''}<br>${c.address||''}`;
+      setT('d-tel', c.tel);
+      setT('d-fax', c.fax);
+      setT('d-tel2', c.tel);
+      setT('d-fax2', c.fax);
+      setT('d-address2', c.address);
+      setT('d-hours', c.business_hours);
+      setT('d-message', c.message);
+      if (c.message_author)
+        document.getElementById('d-message-author').textContent = '— ' + c.message_author;
+    } catch(e) {}
+  })();
+
+  // ── フォーム送信 ──
+  function submitForm() {
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const type  = document.getElementById('f-type').value;
+    const body  = document.getElementById('f-body').value.trim();
+    if (!name || !email || !type || !body) { alert('必須項目（*）をすべてご入力ください。'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('正しいメールアドレスを入力してください。'); return; }
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+    ['f-name','f-org','f-tel','f-email','f-type','f-body'].forEach(id => {
+      const el = document.getElementById(id);
+      el.tagName === 'SELECT' ? el.selectedIndex = 0 : el.value = '';
+    });
+  }
+
+  // スムーズスクロール
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      window.scrollTo({ top: target.offsetTop - 68, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>

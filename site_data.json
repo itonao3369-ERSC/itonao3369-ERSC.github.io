@@ -1,0 +1,156 @@
+{
+  "company": {
+    "name": "エスエス技研株式会社",
+    "name_en": "S.S.Techno-Engineering Corporation",
+    "address": "名古屋市北区落合町48-3",
+    "zip": "462-0017",
+    "tel": "052-902-8410",
+    "fax": "052-902-8415",
+    "business_hours": "平日 9:00〜18:00",
+    "tagline": "放射線測定・防護の専門家",
+    "message": "放射線は、医療や産業において欠かせない存在です。しかしその恩恵を安全に享受するためには、正確な測定と誠実な管理が不可欠です。私たちエスエス技研は、専門知識と最新機器をもって、お客様の放射線安全を誠実に守り続けます。",
+    "message_author": "代表取締役"
+  },
+  "hero": {
+    "eyebrow": "Radiation Measurement & Protection",
+    "title_line1": "放射線から",
+    "title_line2": "守る技術と",
+    "title_line3": "正確な測定を。",
+    "body": "エスエス技研株式会社は、放射線測定・管理・報告業務の専門会社として、医療機関・研究施設・産業施設の放射線安全を長年にわたりサポートしてきました。確かな技術と誠実な対応で、お客様の安全管理を支えます。",
+    "btn_primary": "事業内容を見る",
+    "btn_outline": "お問い合わせ"
+  },
+  "stats": [
+    {
+      "num": "30+",
+      "label": "年の実績"
+    },
+    {
+      "num": "500+",
+      "label": "対応施設数"
+    },
+    {
+      "num": "年4回",
+      "label": "定期測定対応"
+    },
+    {
+      "num": "ISO",
+      "label": "対応品質管理"
+    }
+  ],
+  "products": [
+    {
+      "id": "face",
+      "name": "顔認証アクセス制御システム",
+      "name_en": "Face Recognition Access Control",
+      "category": "security",
+      "category_label": "セキュリティ",
+      "icon": "🔐",
+      "color": "linear-gradient(135deg, #1a4a7a, #2a8a9a)",
+      "summary": "DeepFace・MediaPipe・OpenCVを活用した非接触顔認証システム。IPカメラと連携し、管理区域への入退室を自動記録・制御します。",
+      "description": "DeepFace・MediaPipe・OpenCVを組み合わせた非接触型顔認証システムです。AXIS M5065・Panasonic BB-HCM581などのIPカメラと連携し、管理区域への入退室を自動記録・制御。タッチレスで衛生的な入退室管理を実現します。",
+      "status": "稼働中・検証フェーズ",
+      "features": [
+        "リアルタイム顔認証（複数カメラ同時対応）",
+        "入退室ログの自動記録・CSV出力",
+        "未登録者検知・アラート通知",
+        "管理Webインターフェース（顔登録・削除・履歴閲覧）",
+        "既存ICカード管理システムとの併用可",
+        "ローカルネットワーク完結（クラウド不要・個人情報保護）"
+      ],
+      "tech": [
+        "Python 3.11",
+        "DeepFace",
+        "MediaPipe",
+        "OpenCV",
+        "FastAPI",
+        "SQLite",
+        "RTSP/ONVIF"
+      ]
+    },
+    {
+      "id": "cart",
+      "name": "救急カート薬剤管理システム",
+      "name_en": "Emergency Cart Drug Management",
+      "category": "medical",
+      "category_label": "医療管理",
+      "icon": "💊",
+      "color": "linear-gradient(135deg, #1a5c3a, #2a8c4a)",
+      "summary": "GS1バーコードとiOS Shortcutsを活用した薬剤期限・在庫管理システム。棚卸し・補充ワークフローをペーパーレス化します。",
+      "description": "GS1バーコードのスキャンとiOS Shortcutsアプリを活用した薬剤期限・在庫管理システムです。専用端末不要でiPhoneのカメラだけで運用でき、期限切れ薬剤の見落としをゼロに近づけます。FastAPI＋SQLiteによるサーバーレス設計で、院内ネットワークのみで動作します。",
+      "status": "導入・運用中",
+      "features": [
+        "GS1バーコードスキャンによる薬剤登録・照合",
+        "使用期限の自動管理・期限切れアラート",
+        "棚卸しワークフロー（スキャン→確認→完了）",
+        "PIN認証による操作者識別・ログ記録",
+        "補充履歴・使用履歴のCSV出力",
+        "複数カートの同時管理対応"
+      ],
+      "tech": [
+        "Python 3.11",
+        "FastAPI",
+        "SQLite",
+        "iOS Shortcuts",
+        "GS1 Barcode",
+        "OCR"
+      ]
+    },
+    {
+      "id": "waiting",
+      "name": "待合室混雑管理システム",
+      "name_en": "Waiting Room Monitoring",
+      "category": "analysis",
+      "category_label": "分析・モニタリング",
+      "icon": "👁️",
+      "color": "linear-gradient(135deg, #4a3a1a, #8a6a2a)",
+      "summary": "YOLOとByteTrackによるリアルタイム人数カウント・滞在時間分析システム。待合室の混雑状況を可視化し、患者サービス向上に貢献します。",
+      "description": "YOLOv8とByteTrackを組み合わせたリアルタイム人物追跡システムです。既存の防犯カメラ映像から待合室の人数・滞在時間を自動計測し、混雑状況の可視化と患者フロー改善に役立てることができます。",
+      "status": "導入・運用中",
+      "features": [
+        "リアルタイム人数カウント（最大対応：数十名同時）",
+        "個人IDによる滞在時間の自動計測",
+        "時間帯別混雑グラフのダッシュボード表示",
+        "長時間滞在者への自動アラート",
+        "EXE形式での配布（Python環境不要）",
+        "既存IPカメラ・USBカメラ双方に対応"
+      ],
+      "tech": [
+        "Python 3.11",
+        "YOLOv8",
+        "ByteTrack",
+        "OpenCV",
+        "SQLite",
+        "PyInstaller"
+      ]
+    },
+    {
+      "id": "support",
+      "name": "病院業務サポートツール群",
+      "name_en": "Hospital Support Software",
+      "category": "medical",
+      "category_label": "医療管理",
+      "icon": "🏥",
+      "color": "linear-gradient(135deg, #3a1a5c, #6a3a8c)",
+      "summary": "放射線報告書の自動作成、作業環境測定データの集計・Excel出力、各種帳票の自動生成など、病院・クリニックの事務作業を効率化するツール群です。",
+      "description": "放射線管理業務で培った知見をもとに、病院・クリニックの事務作業を効率化するツール群です。VBAマクロによるExcel自動化から、FastAPIによるWebアプリまで、現場の声を聞きながら継続的に開発・改善しています。",
+      "status": "複数施設で運用中",
+      "features": [
+        "放射線作業環境測定 報告書自動作成（LOGファイル→Excelへ自動転記）",
+        "空気中放射性物質測定結果報告書 自動生成",
+        "RIAブロック・P-NO閾値判定ロジック搭載",
+        "新旧テンプレート自動変換マクロ",
+        "Cs-137ガンマ線スペクトル解析ツール（HTML・A4印刷対応）",
+        "個人被ばく線量集計・帳簿出力ツール"
+      ],
+      "tech": [
+        "Python 3.11",
+        "VBA",
+        "openpyxl",
+        "FastAPI",
+        "ADODB.Stream",
+        "Shift-JIS対応"
+      ]
+    }
+  ]
+}

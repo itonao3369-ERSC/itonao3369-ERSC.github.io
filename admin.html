@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CMS管理画面 | エスエス技研</title>
+<style>
+  :root{--navy:#0d2340;--teal:#1a7a8a;--teal-lt:#22a0b4;--bg:#f0f3f6;--white:#fff;--border:#dde3ea;--text:#1e2d3d;--gray:#6b7f96;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg);color:var(--text);}
+  .layout{display:flex;min-height:100vh;}
+  .sidebar{width:220px;background:var(--navy);flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;}
+  .sidebar-logo{padding:22px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+  .sidebar-logo .mark{background:var(--teal);color:white;font-weight:600;font-size:13px;width:36px;height:36px;border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+  .sidebar-logo .name{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;}
+  .sidebar-logo .name strong{display:block;color:white;font-size:13px;}
+  nav.side{flex:1;padding:12px 0;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,0.65);font-size:13px;cursor:pointer;transition:all .15s;border-left:3px solid transparent;}
+  .nav-item:hover{background:rgba(255,255,255,0.06);color:white;}
+  .nav-item.active{background:rgba(26,122,138,0.25);color:var(--teal-lt);border-left-color:var(--teal-lt);}
+  .sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);}
+  .sidebar-footer a{color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;display:block;margin-bottom:6px;}
+  .sidebar-footer a:hover{color:var(--teal-lt);}
+  .main{flex:1;overflow-y:auto;}
+  .topbar{background:white;border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .topbar h1{font-size:17px;font-weight:700;color:var(--navy);}
+  .save-btn{background:var(--teal);color:white;border:none;padding:9px 22px;border-radius:5px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:background .2s;}
+  .save-btn:hover{background:var(--teal-lt);}
+  .save-btn:disabled{background:var(--gray);cursor:not-allowed;}
+  .content{padding:28px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .card{background:white;border:1px solid var(--border);border-radius:10px;padding:24px 26px;margin-bottom:20px;}
+  .card-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:18px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .form-grid.cols-1{grid-template-columns:1fr;}
+  .field{margin-bottom:0;}
+  .field label{display:block;font-size:11px;font-weight:600;color:var(--gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+  .field input,.field textarea{width:100%;border:1px solid var(--border);border-radius:5px;padding:9px 12px;font-family:inherit;font-size:13px;color:var(--text);background:#fafbfc;outline:none;transition:border-color .2s;}
+  .field input:focus,.field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,122,138,0.12);background:white;}
+  .field textarea{resize:vertical;min-height:90px;}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .stat-row{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:14px;}
+  .stat-row label{font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px;}
+  .stat-row input{width:100%;border:1px solid var(--border);border-radius:4px;padding:7px 10px;font-family:inherit;font-size:13px;background:white;outline:none;}
+  .stat-row input:focus{border-color:var(--teal);}
+  .prod-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .prod-tab{padding:8px 18px;border-radius:6px;border:1px solid var(--border);background:white;font-family:inherit;font-size:13px;cursor:pointer;color:var(--gray);transition:all .15s;}
+  .prod-tab.active{background:var(--navy);color:white;border-color:var(--navy);}
+  .prod-panel{display:none;}
+  .prod-panel.active{display:block;}
+  .feature-list-editor{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+  .feature-row{display:flex;gap:8px;align-items:center;}
+  .feature-row input{flex:1;border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-family:inherit;font-size:13px;background:white;outline:none;}
+  .feature-row input:focus{border-color:var(--teal);}
+  .feature-row .del-btn{background:none;border:1px solid #ddd;color:#aaa;width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:16px;line-height:1;flex-shrink:0;}
+  .feature-row .del-btn:hover{border-color:#e44;color:#e44;}
+  .add-feature-btn{background:none;border:1px dashed var(--teal);color:var(--teal);padding:7px 14px;border-radius:5px;font-family:inherit;font-size:12px;cursor:pointer;margin-top:4px;}
+  .add-feature-btn:hover{background:rgba(26,122,138,0.06);}
+  .backup-list{display:flex;flex-direction:column;gap:8px;}
+  .backup-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;}
+  .backup-row .bname{font-size:13px;color:var(--text);font-family:monospace;}
+  .backup-row .bsize{font-size:11px;color:var(--gray);}
+  #toast{position:fixed;bottom:24px;right:24px;background:var(--teal);color:white;padding:12px 22px;border-radius:6px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+  #toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="mark">SS</div>
+    <div class="name"><strong>エスエス技研</strong>CMS管理画面</div>
+  </div>
+  <nav class="side">
+    <div class="nav-item active" onclick="showPanel('company',this)">🏢 会社情報</div>
+    <div class="nav-item" onclick="showPanel('hero',this)">🖼️ トップページ</div>
+    <div class="nav-item" onclick="showPanel('stats',this)">📊 実績数値</div>
+    <div class="nav-item" onclick="showPanel('products',this)">💻 開発システム</div>
+    <div class="nav-item" onclick="showPanel('backups',this)">🗂️ バックアップ</div>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="/" target="_blank">🌐 サイトを確認</a>
+    <a href="/products.html" target="_blank">📦 システム紹介</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="panel-title">会社情報</h1>
+    <button class="save-btn" id="save-btn" onclick="saveCurrentPanel()">保存する</button>
+  </div>
+  <div class="content">
+
+    <!-- 会社情報 -->
+    <div class="panel active" id="panel-company">
+      <div class="card">
+        <div class="card-title">📋 基本情報</div>
+        <div class="form-grid">
+          <div class="field"><label>会社名（日本語）</label><input id="c-name" type="text"></div>
+          <div class="field"><label>会社名（英語）</label><input id="c-name_en" type="text"></div>
+          <div class="field"><label>郵便番号</label><input id="c-zip" type="text"></div>
+          <div class="field"><label>住所</label><input id="c-address" type="text"></div>
+          <div class="field"><label>電話番号</label><input id="c-tel" type="text"></div>
+          <div class="field"><label>FAX番号</label><input id="c-fax" type="text"></div>
+          <div class="field"><label>営業時間</label><input id="c-business_hours" type="text"></div>
+          <div class="field"><label>キャッチフレーズ</label><input id="c-tagline" type="text"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">💬 代表メッセージ</div>
+        <div class="form-grid cols-1">
+          <div class="field"><label>メッセージ本文</label><textarea id="c-message" rows="5"></textarea></div>
+          <div class="field"><label>署名</label><input id="c-message_author" type="text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- トップページ -->
+    <div class="panel" id="panel-hero">
+      <div class="card">
+        <div class="card-title">🖼️ ヒーローセクション</div>
+        <div class="form-grid cols-1">
+          <div class="field"><label>上部ラベル（英語）</label><input id="h-eyebrow" type="text"></div>
+          <div class="field"><label>タイトル 1行目</label><input id="h-title_line1" type="text"></div>
+          <div class="field"><label>タイトル 2行目（緑色）</label><input id="h-title_line2" type="text"></div>
+          <div class="field"><label>タイトル 3行目（緑色）</label><input id="h-title_line3" type="text"></div>
+          <div class="field"><label>説明文</label><textarea id="h-body" rows="4"></textarea></div>
+        </div>
+        <div class="form-grid" style="margin-top:14px;">
+          <div class="field"><label>ボタン①</label><input id="h-btn_primary" type="text"></div>
+          <div class="field"><label>ボタン②</label><input id="h-btn_outline" type="text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 実績数値 -->
+    <div class="panel" id="panel-stats">
+      <div class="card">
+        <div class="card-title">📊 実績数値バー</div>
+        <div class="stats-grid" id="stats-grid"></div>
+      </div>
+    </div>
+
+    <!-- 開発システム -->
+    <div class="panel" id="panel-products">
+      <div class="prod-tabs" id="prod-tabs"></div>
+      <div id="prod-panels"></div>
+    </div>
+
+    <!-- バックアップ -->
+    <div class="panel" id="panel-backups">
+      <div class="card">
+        <div class="card-title">🗂️ 自動バックアップ（直近10件）</div>
+        <div class="backup-list" id="backup-list"><p style="color:var(--gray);font-size:13px;">読み込み中...</p></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div id="toast"></div>
+
+<script>
+let DATA = {}, currentPanel = 'company';
+
+async function loadData() {
+  const r = await fetch('/api/data');
+  DATA = await r.json();
+  populateAll();
+}
+
+function populateAll() {
+  const c = DATA.company;
+  ['name','name_en','zip','address','tel','fax','business_hours','tagline','message','message_author']
+    .forEach(k => { const el = document.getElementById('c-'+k); if(el) el.value = c[k]||''; });
+  const h = DATA.hero;
+  ['eyebrow','title_line1','title_line2','title_line3','body','btn_primary','btn_outline']
+    .forEach(k => { const el = document.getElementById('h-'+k); if(el) el.value = h[k]||''; });
+  const sg = document.getElementById('stats-grid');
+  sg.innerHTML = DATA.stats.map((s,i) => `
+    <div class="stat-row">
+      <label>数値 ${i+1}</label><input id="stat-num-${i}" value="${esc(s.num)}">
+      <label style="margin-top:6px;">ラベル ${i+1}</label><input id="stat-lbl-${i}" value="${esc(s.label)}">
+    </div>`).join('');
+  buildProductEditor();
+}
+
+function buildProductEditor() {
+  const tabs = document.getElementById('prod-tabs');
+  const panels = document.getElementById('prod-panels');
+  tabs.innerHTML = ''; panels.innerHTML = '';
+  DATA.products.forEach((p, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'prod-tab' + (i===0?' active':'');
+    tab.textContent = p.icon + ' ' + p.name;
+    tab.onclick = () => {
+      document.querySelectorAll('.prod-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.prod-panel').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('pp-'+p.id).classList.add('active');
+    };
+    tabs.appendChild(tab);
+    const panel = document.createElement('div');
+    panel.className = 'prod-panel card' + (i===0?' active':'');
+    panel.id = 'pp-' + p.id;
+    panel.innerHTML = `
+      <div class="card-title">${p.icon} ${esc(p.name)}</div>
+      <div class="form-grid">
+        <div class="field"><label>システム名（日本語）</label><input id="p-${p.id}-name" value="${esc(p.name)}"></div>
+        <div class="field"><label>システム名（英語）</label><input id="p-${p.id}-name_en" value="${esc(p.name_en)}"></div>
+        <div class="field"><label>ステータス</label><input id="p-${p.id}-status" value="${esc(p.status)}"></div>
+        <div class="field"><label>カテゴリ</label><input id="p-${p.id}-category_label" value="${esc(p.category_label)}"></div>
+      </div>
+      <div class="field" style="margin-top:14px;"><label>概要（カード表示）</label><textarea id="p-${p.id}-summary" rows="3">${esc(p.summary)}</textarea></div>
+      <div class="field" style="margin-top:14px;"><label>詳細説明（モーダル）</label><textarea id="p-${p.id}-description" rows="4">${esc(p.description)}</textarea></div>
+      <div style="margin-top:18px;">
+        <div class="card-title" style="margin-bottom:10px;">機能一覧</div>
+        <div class="feature-list-editor" id="feat-${p.id}">
+          ${p.features.map((f,fi) => featureRow(p.id, f, fi)).join('')}
+        </div>
+        <button class="add-feature-btn" onclick="addFeature('${p.id}')">＋ 機能を追加</button>
+      </div>`;
+    panels.appendChild(panel);
+  });
+}
+
+function featureRow(pid, value, idx) {
+  return `<div class="feature-row" id="fr-${pid}-${idx}">
+    <input value="${esc(value)}">
+    <button class="del-btn" onclick="delFeature('${pid}',${idx})">×</button>
+  </div>`;
+}
+function addFeature(pid) {
+  const c = document.getElementById('feat-'+pid);
+  c.insertAdjacentHTML('beforeend', featureRow(pid, '', c.children.length));
+}
+function delFeature(pid, idx) {
+  const r = document.getElementById(`fr-${pid}-${idx}`); if(r) r.remove();
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showPanel(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  el.classList.add('active');
+  currentPanel = name;
+  const titles = {company:'会社情報',hero:'トップページ',stats:'実績数値',products:'開発システム',backups:'バックアップ'};
+  document.getElementById('panel-title').textContent = titles[name]||name;
+  if(name==='backups') loadBackups();
+}
+
+async function saveCurrentPanel() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = '保存中...';
+  try {
+    if(currentPanel==='company') {
+      const b = {};
+      ['name','name_en','zip','address','tel','fax','business_hours','tagline','message','message_author']
+        .forEach(k => b[k] = document.getElementById('c-'+k)?.value||'');
+      await post('/api/company', b);
+    } else if(currentPanel==='hero') {
+      const b = {};
+      ['eyebrow','title_line1','title_line2','title_line3','body','btn_primary','btn_outline']
+        .forEach(k => b[k] = document.getElementById('h-'+k)?.value||'');
+      await post('/api/hero', b);
+    } else if(currentPanel==='stats') {
+      const stats = DATA.stats.map((_,i) => ({
+        num:   document.getElementById(`stat-num-${i}`)?.value||'',
+        label: document.getElementById(`stat-lbl-${i}`)?.value||''
+      }));
+      await post('/api/stats', {stats});
+    } else if(currentPanel==='products') {
+      for(const p of DATA.products) {
+        const b = {
+          name:           document.getElementById(`p-${p.id}-name`)?.value||p.name,
+          name_en:        document.getElementById(`p-${p.id}-name_en`)?.value||p.name_en,
+          status:         document.getElementById(`p-${p.id}-status`)?.value||p.status,
+          category_label: document.getElementById(`p-${p.id}-category_label`)?.value||p.category_label,
+          summary:        document.getElementById(`p-${p.id}-summary`)?.value||p.summary,
+          description:    document.getElementById(`p-${p.id}-description`)?.value||p.description,
+        };
+        await post(`/api/product/${p.id}`, b);
+        const rows = document.querySelectorAll(`#feat-${p.id} .feature-row input`);
+        const features = [...rows].map(r => r.value).filter(v => v.trim());
+        await post(`/api/product/${p.id}/features`, {features});
+      }
+    }
+    showToast('✔ 保存しました');
+  } catch(e) {
+    showToast('❌ 保存失敗: '+e.message);
+  }
+  btn.disabled = false; btn.textContent = '保存する';
+}
+
+async function post(url, body) {
+  const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  if(!r.ok) throw new Error(await r.text());
+}
+
+async function loadBackups() {
+  const r = await fetch('/api/backups');
+  const list = await r.json();
+  const el = document.getElementById('backup-list');
+  if(!list.length) { el.innerHTML='<p style="color:var(--gray);font-size:13px;">バックアップはまだありません</p>'; return; }
+  el.innerHTML = list.map(b => `
+    <div class="backup-row">
+      <span class="bname">${b.name}</span>
+      <span class="bsize">${(b.size/1024).toFixed(1)} KB</span>
+    </div>`).join('');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+loadData();
+</script>
+</body>
+</html>
