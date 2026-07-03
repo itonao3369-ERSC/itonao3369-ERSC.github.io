@@ -109,15 +109,35 @@
       box-shadow: 0 2px 12px rgba(13,35,64,0.06);
     }
     .pillar-header {
-      padding: 28px 26px 22px;
+      padding: 0;
       position: relative;
+      overflow: hidden;
     }
     .pillar-header.color-blue  { background: linear-gradient(135deg, #1a4a8a, #2a6aaa); }
     .pillar-header.color-teal  { background: linear-gradient(135deg, #1a6a7a, #2a8a9a); }
     .pillar-header.color-gold  { background: linear-gradient(135deg, #8a5a10, #b07820); }
-    .pillar-icon { font-size: 36px; margin-bottom: 12px; display: block; }
-    .pillar-header h3 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 600; color: white; margin-bottom: 6px; }
-    .pillar-header p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.7; }
+
+    /* パンフレット画像エリア */
+    .pillar-img {
+      width: 100%; height: 200px;
+      object-fit: cover; object-position: top;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .service-pillar:hover .pillar-img { transform: scale(1.04); }
+
+    /* 画像の上にかぶせるテキストオーバーレイ */
+    .pillar-overlay {
+      padding: 20px 24px 18px;
+      position: relative;
+    }
+    .pillar-header.color-blue  .pillar-overlay { background: linear-gradient(135deg, #1a4a8a, #2a6aaa); }
+    .pillar-header.color-teal  .pillar-overlay { background: linear-gradient(135deg, #1a6a7a, #2a8a9a); }
+    .pillar-header.color-gold  .pillar-overlay { background: linear-gradient(135deg, #8a5a10, #b07820); }
+
+    .pillar-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+    .pillar-header h3 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 600; color: white; margin-bottom: 4px; }
+    .pillar-header p { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; }
 
     .pillar-body { padding: 22px 26px 28px; }
     .pillar-items { list-style: none; display: flex; flex-direction: column; gap: 0; }
@@ -276,9 +296,12 @@
     <!-- 作業環境測定 -->
     <div class="service-pillar">
       <div class="pillar-header color-blue">
-        <span class="pillar-icon">🔬</span>
-        <h3>作業環境測定</h3>
-        <p>放射線施設の安全管理を支える各種測定を実施します。</p>
+        <img src="images/service_measurement.jpg" alt="作業環境測定" class="pillar-img">
+        <div class="pillar-overlay">
+          <span class="pillar-icon">🔬</span>
+          <h3>作業環境測定</h3>
+          <p>放射線施設の安全管理を支える各種測定を実施します。</p>
+        </div>
       </div>
       <div class="pillar-body">
         <ul class="pillar-items">
@@ -313,9 +336,12 @@
     <!-- 漏洩線量測定 -->
     <div class="service-pillar">
       <div class="pillar-header color-teal">
-        <span class="pillar-icon">📡</span>
-        <h3>漏洩線量測定</h3>
-        <p>各種放射線装置の漏洩線量を測定し、施設の安全を確認します。</p>
+        <img src="images/service_leakage.jpg" alt="漏洩線量測定" class="pillar-img">
+        <div class="pillar-overlay">
+          <span class="pillar-icon">📡</span>
+          <h3>漏洩線量測定</h3>
+          <p>各種放射線装置の漏洩線量を測定し、施設の安全を確認します。</p>
+        </div>
       </div>
       <div class="pillar-body">
         <ul class="pillar-items">
@@ -357,9 +383,12 @@
     <!-- 施設管理・コンサルティング -->
     <div class="service-pillar">
       <div class="pillar-header color-gold">
-        <span class="pillar-icon">🏗️</span>
-        <h3>施設管理・コンサルティング</h3>
-        <p>設計から運用、廃止までトータルでサポートします。</p>
+        <img src="images/service_consulting.jpg" alt="施設管理・コンサルティング" class="pillar-img">
+        <div class="pillar-overlay">
+          <span class="pillar-icon">🏗️</span>
+          <h3>施設管理・コンサルティング</h3>
+          <p>設計から運用、廃止までトータルでサポートします。</p>
+        </div>
       </div>
       <div class="pillar-body">
         <ul class="pillar-items">

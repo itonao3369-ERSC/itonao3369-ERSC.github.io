@@ -114,6 +114,21 @@
     .banner-kanri  { background: linear-gradient(135deg, #1a4a3a, #2a7a5a); }
     .banner-naibu  { background: linear-gradient(135deg, #3a2a1a, #7a5a2a); }
 
+    /* パンフレット画像をバナー背景に使うクラス */
+    .banner-with-img {
+      position: relative;
+    }
+    .banner-with-img .banner-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      opacity: 0.28;
+    }
+    .banner-with-img .banner-icon,
+    .banner-with-img .card-tag {
+      position: relative; z-index: 1;
+    }
+
     .card-tag {
       position: absolute; top: 14px; right: 14px; z-index: 2;
       background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
@@ -241,7 +256,7 @@
 <!-- HEADER -->
 <header>
   <a class="logo" href="index.html">
-    <img src="logo.png" alt="エスエス技研ロゴ" style="width:38px;height:38px;object-fit:contain;filter:invert(1) brightness(2);">
+    <div class="logo-mark">SS</div>
     <div class="logo-text">
       <span class="en">SS GIKEN Co., Ltd.</span>
       <span class="ja">エスエス技研株式会社</span>
@@ -370,7 +385,8 @@
 
     <!-- Sdec_V17 -->
     <div class="product-card" data-cat="radiation" onclick="openModal('sdec')">
-      <div class="card-banner banner-sdec">
+      <div class="card-banner banner-sdec banner-with-img">
+        <img src="images/service_measurement.jpg" alt="" class="banner-bg">
         <span class="banner-icon">📐</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -391,7 +407,8 @@
 
     <!-- ScRaX -->
     <div class="product-card" data-cat="radiation" onclick="openModal('scrax')">
-      <div class="card-banner banner-scrax">
+      <div class="card-banner banner-scrax banner-with-img">
+        <img src="images/service_leakage.jpg" alt="" class="banner-bg">
         <span class="banner-icon">📡</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -412,7 +429,8 @@
 
     <!-- Rad-Kanri -->
     <div class="product-card" data-cat="radiation" onclick="openModal('kanri')">
-      <div class="card-banner banner-kanri">
+      <div class="card-banner banner-kanri banner-with-img">
+        <img src="images/service_consulting.jpg" alt="" class="banner-bg">
         <span class="banner-icon">👤</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -433,7 +451,8 @@
 
     <!-- naibu -->
     <div class="product-card" data-cat="radiation" onclick="openModal('naibu')">
-      <div class="card-banner banner-naibu">
+      <div class="card-banner banner-naibu banner-with-img">
+        <img src="images/service_measurement.jpg" alt="" class="banner-bg" style="object-position:center bottom">
         <span class="banner-icon">🧪</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -791,7 +810,7 @@
 <footer>
   <div class="footer-inner">
     <div class="logo">
-      <img src="logo.png" alt="エスエス技研ロゴ" style="width:38px;height:38px;object-fit:contain;filter:invert(1) brightness(2);">
+      <div class="logo-mark">SS</div>
       <div class="logo-text">
         <span class="en">SS GIKEN Co., Ltd.</span>
         <span class="ja">エスエス技研株式会社</span>
