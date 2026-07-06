@@ -122,8 +122,10 @@
       width: 100%; height: 200px;
       object-fit: cover; object-position: top;
       display: block;
-      transition: transform .4s ease;
+      opacity: 0.5;
+      transition: transform .4s ease, opacity .3s ease;
     }
+    .service-pillar:hover .pillar-img { opacity: 0.7; }
     .service-pillar:hover .pillar-img { transform: scale(1.04); }
 
     /* 画像の上にかぶせるテキストオーバーレイ */
@@ -297,7 +299,7 @@
     <!-- 作業環境測定 -->
     <div class="service-pillar">
       <div class="pillar-header color-blue">
-        <img src="images/service_measurement.jpg" alt="作業環境測定" class="pillar-img">
+        <img src="images/illust_measurement.jpg" alt="作業環境測定" class="pillar-img">
         <div class="pillar-overlay">
           <span class="pillar-icon">🔬</span>
           <h3>作業環境測定</h3>
@@ -337,7 +339,7 @@
     <!-- 漏洩線量測定 -->
     <div class="service-pillar">
       <div class="pillar-header color-teal">
-        <img src="images/service_leakage.jpg" alt="漏洩線量測定" class="pillar-img">
+        <img src="images/illust_leakage.jpg" alt="漏洩線量測定" class="pillar-img">
         <div class="pillar-overlay">
           <span class="pillar-icon">📡</span>
           <h3>漏洩線量測定</h3>
@@ -384,7 +386,7 @@
     <!-- 施設管理・コンサルティング -->
     <div class="service-pillar">
       <div class="pillar-header color-gold">
-        <img src="images/service_consulting.jpg" alt="施設管理・コンサルティング" class="pillar-img">
+        <img src="images/illust_consulting.jpg" alt="施設管理・コンサルティング" class="pillar-img">
         <div class="pillar-overlay">
           <span class="pillar-icon">🏗️</span>
           <h3>施設管理・コンサルティング</h3>

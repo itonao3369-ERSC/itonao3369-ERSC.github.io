@@ -188,8 +188,16 @@
     .modal-header {
       height: 220px; display: flex; align-items: center; justify-content: center;
       position: sticky; top: 0; z-index: 2;
+      overflow: hidden;
     }
-    .modal-header .banner-icon { font-size: 80px; }
+    .modal-header .banner-icon { font-size: 80px; position: relative; z-index: 1; }
+    /* モーダルヘッダー内のパンフ画像 */
+    .modal-header .modal-header-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      opacity: 0.5;
+    }
     .modal-close {
       position: absolute; top: 16px; right: 16px;
       background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
@@ -256,7 +264,7 @@
 <!-- HEADER -->
 <header>
   <a class="logo" href="index.html">
-    <div class="logo-mark">SS</div>
+    <img src="logo.png" alt="エスエス技研ロゴ" style="width:38px;height:38px;object-fit:contain;filter:invert(1) brightness(2);">
     <div class="logo-text">
       <span class="en">SS GIKEN Co., Ltd.</span>
       <span class="ja">エスエス技研株式会社</span>
@@ -386,8 +394,8 @@
 
     <!-- Sdec_V17 -->
     <div class="product-card" data-cat="radiation" onclick="openModal('sdec')">
-      <div class="card-banner banner-sdec banner-with-img">
-        <img src="images/service_measurement.jpg" alt="" class="banner-bg">
+      <div class="card-banner banner-sdec">
+        <!-- ここに画像を入れる場合: <img src="images/sdec.jpg" alt="" class="banner-bg"> -->
         <span class="banner-icon">📐</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -408,8 +416,8 @@
 
     <!-- ScRaX -->
     <div class="product-card" data-cat="radiation" onclick="openModal('scrax')">
-      <div class="card-banner banner-scrax banner-with-img">
-        <img src="images/service_leakage.jpg" alt="" class="banner-bg">
+      <div class="card-banner banner-scrax">
+        <!-- ここに画像を入れる場合: <img src="images/scrax.jpg" alt="" class="banner-bg"> -->
         <span class="banner-icon">📡</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -430,8 +438,8 @@
 
     <!-- Rad-Kanri -->
     <div class="product-card" data-cat="radiation" onclick="openModal('kanri')">
-      <div class="card-banner banner-kanri banner-with-img">
-        <img src="images/service_consulting.jpg" alt="" class="banner-bg">
+      <div class="card-banner banner-kanri">
+        <!-- ここに画像を入れる場合: <img src="images/kanri.jpg" alt="" class="banner-bg"> -->
         <span class="banner-icon">👤</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -452,8 +460,8 @@
 
     <!-- naibu -->
     <div class="product-card" data-cat="radiation" onclick="openModal('naibu')">
-      <div class="card-banner banner-naibu banner-with-img">
-        <img src="images/service_measurement.jpg" alt="" class="banner-bg" style="object-position:center bottom">
+      <div class="card-banner banner-naibu">
+        <!-- ここに画像を入れる場合: <img src="images/naibu.jpg" alt="" class="banner-bg"> -->
         <span class="banner-icon">🧪</span>
         <span class="card-tag">放射線ソフト</span>
       </div>
@@ -481,6 +489,7 @@
 <div class="modal-overlay" id="modal-face" onclick="closeOnOverlay(event, 'face')">
   <div class="modal">
     <div class="modal-header banner-face">
+      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center;">
       <span class="banner-icon">🔐</span>
       <button class="modal-close" onclick="closeModal('face')">✕</button>
     </div>
@@ -527,6 +536,7 @@
 <div class="modal-overlay" id="modal-cart" onclick="closeOnOverlay(event, 'cart')">
   <div class="modal">
     <div class="modal-header banner-cart">
+      <img src="images/illust_consulting.jpg" alt="" class="modal-header-img" style="object-position:center top;">
       <span class="banner-icon">💊</span>
       <button class="modal-close" onclick="closeModal('cart')">✕</button>
     </div>
@@ -572,6 +582,7 @@
 <div class="modal-overlay" id="modal-waiting" onclick="closeOnOverlay(event, 'waiting')">
   <div class="modal">
     <div class="modal-header banner-waiting">
+      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center bottom;">
       <span class="banner-icon">👁️</span>
       <button class="modal-close" onclick="closeModal('waiting')">✕</button>
     </div>
@@ -617,6 +628,7 @@
 <div class="modal-overlay" id="modal-support" onclick="closeOnOverlay(event, 'support')">
   <div class="modal">
     <div class="modal-header banner-support">
+      <img src="images/illust_consulting.jpg" alt="" class="modal-header-img" style="object-position:center;">
       <span class="banner-icon">🏥</span>
       <button class="modal-close" onclick="closeModal('support')">✕</button>
     </div>
@@ -662,6 +674,7 @@
 <div class="modal-overlay" id="modal-sdec" onclick="closeOnOverlay(event,'sdec')">
   <div class="modal">
     <div class="modal-header banner-sdec">
+      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center top;">
       <span class="banner-icon">📐</span>
       <button class="modal-close" onclick="closeModal('sdec')">✕</button>
     </div>
@@ -700,6 +713,7 @@
 <div class="modal-overlay" id="modal-scrax" onclick="closeOnOverlay(event,'scrax')">
   <div class="modal">
     <div class="modal-header banner-scrax">
+      <img src="images/illust_leakage.jpg" alt="" class="modal-header-img" style="object-position:center;">
       <span class="banner-icon">📡</span>
       <button class="modal-close" onclick="closeModal('scrax')">✕</button>
     </div>
@@ -737,6 +751,7 @@
 <div class="modal-overlay" id="modal-kanri" onclick="closeOnOverlay(event,'kanri')">
   <div class="modal">
     <div class="modal-header banner-kanri">
+      <img src="images/illust_consulting.jpg" alt="" class="modal-header-img" style="object-position:center;">
       <span class="banner-icon">👤</span>
       <button class="modal-close" onclick="closeModal('kanri')">✕</button>
     </div>
@@ -774,6 +789,7 @@
 <div class="modal-overlay" id="modal-naibu" onclick="closeOnOverlay(event,'naibu')">
   <div class="modal">
     <div class="modal-header banner-naibu">
+      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center bottom;">
       <span class="banner-icon">🧪</span>
       <button class="modal-close" onclick="closeModal('naibu')">✕</button>
     </div>
