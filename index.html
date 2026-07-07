@@ -5,20 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>エスエス技研株式会社 | 放射線測定・防護の専門家</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy:    #0d2340;
-      --navy-mid:#14335c;
-      --teal:    #1a7a8a;
-      --teal-lt: #22a0b4;
+      --navy:    #061528;
+      --navy-mid:#0a2040;
+      --teal:    #0d9db5;
+      --teal-lt: #22c5dc;
+      --teal-dk: #0a7a8e;
       --gold:    #c8993c;
-      --offwhite:#f4f6f8;
+      --offwhite:#f0f4f8;
       --white:   #ffffff;
-      --gray-lt: #e8ecf0;
-      --gray:    #8a9bb0;
-      --text:    #1e2d3d;
-      --text-sm: #4a5d72;
+      --gray-lt: #dde4ed;
+      --gray:    #7a8fa8;
+      --text:    #1a2a3a;
+      --text-sm: #3d5470;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -27,225 +28,370 @@
     /* ── HEADER ── */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(13,35,64,0.97); backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 0 5%; display: flex; align-items: center; justify-content: space-between;
-      height: 68px;
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 70px;
+      transition: background .3s, box-shadow .3s;
+    }
+    header.scrolled {
+      background: rgba(6,21,40,0.97);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
     }
     .logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-    .logo img { width: 38px; height: 38px; object-fit: contain; filter: invert(1) brightness(2); }
-    .logo-text .en { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 300; letter-spacing: 0.12em; opacity: 0.65; color: white; display: block; }
+    .logo img { width: 40px; height: 40px; object-fit: contain; filter: invert(1) brightness(2); }
+    .logo-text .en { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 300; letter-spacing: 0.15em; opacity: 0.65; color: white; display: block; }
     .logo-text .ja { font-size: 15px; font-weight: 500; color: white; display: block; }
-    nav { display: flex; gap: 28px; align-items: center; }
-    nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; letter-spacing: 0.04em; transition: color .2s; }
-    nav a:hover { color: var(--teal-lt); }
-    nav .cta-nav { background: var(--teal); color: white; padding: 8px 20px; border-radius: 4px; font-size: 13px; font-weight: 500; transition: background .2s; }
-    nav .cta-nav:hover { background: var(--teal-lt); color: white; }
+    nav { display: flex; gap: 8px; align-items: center; }
+    nav a {
+      color: rgba(255,255,255,0.82); text-decoration: none;
+      font-size: 13px; letter-spacing: 0.04em;
+      padding: 8px 14px; border-radius: 6px;
+      transition: color .2s, background .2s;
+    }
+    nav a:hover { color: var(--teal-lt); background: rgba(255,255,255,0.06); }
+    nav .cta-nav {
+      background: var(--teal); color: white;
+      padding: 9px 20px; border-radius: 6px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 7px;
+      transition: background .2s, transform .15s;
+    }
+    nav .cta-nav:hover { background: var(--teal-lt); transform: translateY(-1px); }
 
     /* ── HERO ── */
     .hero {
       min-height: 100vh;
-      background-color: #0d2340;
-      background-image:
-        radial-gradient(ellipse 70% 60% at 110% 50%, rgba(26,122,138,0.22) 0%, transparent 60%),
-        linear-gradient(160deg, #0d2340 0%, #14335c 100%);
-      display: grid; grid-template-columns: 1fr 1fr;
-      align-items: center; padding: 120px 5% 80px;
-      position: relative; overflow: visible; gap: 40px;
-    }
-    .hero-content {
-      max-width: 580px; position: relative; z-index: 2;
-      background: rgba(10,28,52,0.72); backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px); border-radius: 12px;
-      padding: 40px 44px; border: 1px solid rgba(255,255,255,0.06);
-    }
-    .hero-eyebrow {
-      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--teal-lt); margin-bottom: 20px;
-    }
-    .hero-title {
-      font-family: 'Noto Serif JP', serif; font-size: clamp(28px, 4vw, 46px);
-      font-weight: 600; line-height: 1.4; color: white; margin-bottom: 24px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-    .hero-title span { color: var(--teal-lt); }
-    .hero-body {
-      font-size: 15px; color: rgba(255,255,255,0.88); line-height: 1.85;
-      margin-bottom: 40px; font-weight: 300; text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-    }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn-primary { background: var(--teal); color: white; text-decoration: none; padding: 13px 30px; border-radius: 4px; font-size: 14px; font-weight: 500; transition: background .2s, transform .15s; display: inline-block; }
-    .btn-primary:hover { background: var(--teal-lt); transform: translateY(-1px); }
-    .btn-outline { border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.85); text-decoration: none; padding: 13px 30px; border-radius: 4px; font-size: 14px; font-weight: 400; transition: border-color .2s, color .2s; display: inline-block; }
-    .btn-outline:hover { border-color: var(--teal-lt); color: var(--teal-lt); }
-
-    /* wave rings */
-    .wave-rings { position: relative; width: 100%; aspect-ratio: 1; max-width: 480px; justify-self: center; pointer-events: none; z-index: 0; }
-    .ring { position: absolute; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 4s ease-in-out infinite; }
-    .ring:nth-child(1){ width: 80px;  height: 80px;  border: 1px solid rgba(34,160,180,0.8); animation-delay: 0s; }
-    .ring:nth-child(2){ width: 160px; height: 160px; border: 1px solid rgba(34,160,180,0.5); animation-delay: 0.5s; }
-    .ring:nth-child(3){ width: 260px; height: 260px; border: 1px solid rgba(26,122,138,0.35); animation-delay: 1s; }
-    .ring:nth-child(4){ width: 380px; height: 380px; border: 1px solid rgba(26,122,138,0.2);  animation-delay: 1.5s; }
-    .ring:nth-child(5){ width: 480px; height: 480px; border: 1px solid rgba(26,122,138,0.1);  animation-delay: 2s; }
-    .ring-dot { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 12px; height: 12px; border-radius: 50%; background: var(--teal-lt); box-shadow: 0 0 20px var(--teal-lt), 0 0 40px rgba(34,160,180,0.4); }
-    @keyframes pulse { 0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.03)} }
-
-    /* ── SECTION BASE ── */
-    section { padding: 90px 5%; }
-    .section-label { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 12px; }
-    .section-title { font-family: 'Noto Serif JP', serif; font-size: clamp(22px, 3vw, 32px); font-weight: 600; color: var(--navy); line-height: 1.4; margin-bottom: 16px; }
-    .section-body { font-size: 15px; color: var(--text-sm); max-width: 600px; line-height: 1.85; }
-
-    /* ── SERVICES 3カラム ── */
-    #services { background: var(--offwhite); }
-    .services-3col {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 28px; margin-top: 52px;
-    }
-    .service-pillar {
-      background: white; border-radius: 12px;
-      border: 1px solid var(--gray-lt); overflow: hidden;
-      box-shadow: 0 2px 12px rgba(13,35,64,0.06);
-    }
-    .pillar-header {
-      padding: 0;
       position: relative;
+      display: flex; align-items: center;
       overflow: hidden;
     }
-    .pillar-header.color-blue  { background: linear-gradient(135deg, #1a4a8a, #2a6aaa); }
-    .pillar-header.color-teal  { background: linear-gradient(135deg, #1a6a7a, #2a8a9a); }
-    .pillar-header.color-gold  { background: linear-gradient(135deg, #8a5a10, #b07820); }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('hero_bg.jpg');
+      background-size: cover;
+      background-position: center right;
+      transform: scale(1.05);
+      transition: transform 8s ease;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(6,21,40,0.92) 0%,
+        rgba(6,21,40,0.78) 45%,
+        rgba(6,21,40,0.25) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      padding: 140px 5% 80px;
+      max-width: 680px;
+    }
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 400;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--teal-lt); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 32px; height: 1px; background: var(--teal-lt);
+    }
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(36px, 5.5vw, 62px);
+      font-weight: 600; line-height: 1.25;
+      color: white; margin-bottom: 28px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+    .hero-title .accent { color: var(--teal-lt); }
+    .hero-body {
+      font-size: 15px; color: rgba(255,255,255,0.78);
+      line-height: 1.9; margin-bottom: 44px;
+      font-weight: 300; max-width: 520px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal); color: white; text-decoration: none;
+      padding: 14px 32px; border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(13,157,181,0.35);
+    }
+    .btn-primary:hover { background: var(--teal-lt); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(13,157,181,0.45); }
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.4); color: white; text-decoration: none;
+      padding: 14px 32px; border-radius: 8px;
+      font-size: 14px; font-weight: 400;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: border-color .2s, background .2s;
+      backdrop-filter: blur(4px);
+    }
+    .btn-outline:hover { border-color: var(--teal-lt); background: rgba(13,157,181,0.12); color: var(--teal-lt); }
 
-    /* パンフレット画像エリア */
+    /* ── 特徴バー ── */
+    .feature-bar {
+      background: rgba(6,21,40,0.95);
+      border-top: 1px solid rgba(13,157,181,0.2);
+      padding: 28px 5%;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 0;
+    }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 0 24px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .feature-item:first-child { padding-left: 0; }
+    .feature-item:last-child { border-right: none; }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(13,157,181,0.15);
+      border: 1px solid rgba(13,157,181,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .feature-item h4 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .feature-item p  { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 100px 5%; }
+    .section-label {
+      font-family: 'Inter', sans-serif; font-size: 11px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--teal); font-weight: 600; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::before { content:''; display:block; width:24px; height:1px; background:var(--teal); }
+    .section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 600; color: var(--navy); line-height: 1.35; margin-bottom: 18px;
+    }
+    .section-body { font-size: 15px; color: var(--text-sm); max-width: 600px; line-height: 1.9; }
+
+    /* ── SERVICES ── */
+    #services { background: var(--navy); padding: 100px 5%; }
+    #services .section-label { color: var(--teal-lt); }
+    #services .section-label::before { background: var(--teal-lt); }
+    #services .section-title { color: white; }
+    #services .section-body { color: rgba(255,255,255,0.6); }
+
+    .services-3col {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 24px; margin-top: 56px;
+    }
+    .service-pillar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(13,157,181,0.2);
+      border-radius: 14px; overflow: hidden;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+    }
+    .service-pillar:hover {
+      border-color: rgba(13,157,181,0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(13,157,181,0.15);
+    }
+    .pillar-header { padding: 0; position: relative; overflow: hidden; }
     .pillar-img {
       width: 100%; height: 200px;
       object-fit: cover; object-position: top;
-      display: block;
-      opacity: 0.5;
-      transition: transform .4s ease, opacity .3s ease;
+      display: block; opacity: 0.5;
+      transition: opacity .3s, transform .4s;
     }
-    .service-pillar:hover .pillar-img { opacity: 0.7; }
-    .service-pillar:hover .pillar-img { transform: scale(1.04); }
-
-    /* 画像の上にかぶせるテキストオーバーレイ */
+    .service-pillar:hover .pillar-img { opacity: 0.65; transform: scale(1.04); }
     .pillar-overlay {
-      padding: 20px 24px 18px;
-      position: relative;
+      padding: 22px 24px 18px;
+      background: linear-gradient(135deg, rgba(10,32,64,0.95), rgba(13,122,142,0.85));
     }
-    .pillar-header.color-blue  .pillar-overlay { background: linear-gradient(135deg, #1a4a8a, #2a6aaa); }
-    .pillar-header.color-teal  .pillar-overlay { background: linear-gradient(135deg, #1a6a7a, #2a8a9a); }
-    .pillar-header.color-gold  .pillar-overlay { background: linear-gradient(135deg, #8a5a10, #b07820); }
+    .pillar-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .pillar-overlay h3 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 18px; font-weight: 600; color: white; margin-bottom: 6px;
+    }
+    .pillar-overlay p { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.7; }
 
-    .pillar-icon { font-size: 28px; margin-bottom: 8px; display: block; }
-    .pillar-header h3 { font-family: 'Noto Serif JP', serif; font-size: 20px; font-weight: 600; color: white; margin-bottom: 4px; }
-    .pillar-header p { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; }
-
-    .pillar-body { padding: 22px 26px 28px; }
-    .pillar-items { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .pillar-body { padding: 20px 24px 24px; }
+    .pillar-items { list-style: none; }
     .pillar-item {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 14px 0; border-bottom: 1px solid var(--gray-lt);
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
     }
     .pillar-item:last-child { border-bottom: none; }
     .item-num {
-      width: 26px; height: 26px; border-radius: 50%;
+      width: 24px; height: 24px; border-radius: 50%;
       background: var(--teal); color: white;
-      font-size: 12px; font-weight: 700;
+      font-size: 11px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; margin-top: 2px;
     }
-    .item-num.sq { border-radius: 5px; background: var(--navy); font-size: 11px; }
-    .item-content h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-    .item-content p  { font-size: 13px; color: var(--text-sm); line-height: 1.7; }
-
+    .item-num.sq { border-radius: 4px; background: rgba(13,157,181,0.25); color: var(--teal-lt); font-size: 10px; border: 1px solid rgba(13,157,181,0.4); }
+    .item-content h4 { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 3px; }
+    .item-content p  { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.65; }
     .pillar-footer {
-      padding: 14px 26px; border-top: 1px solid var(--gray-lt);
-      background: var(--offwhite); font-size: 12px; color: var(--text-sm);
+      padding: 12px 24px 16px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 12px; color: rgba(255,255,255,0.45);
     }
-    .pillar-footer strong { color: var(--navy); }
+    .pillar-footer strong { color: var(--teal-lt); }
 
     /* 対応施設バッジ */
-    .facility-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 52px; justify-content: center; }
-    .facility-badge {
-      background: white; border: 1px solid var(--gray-lt); border-radius: 999px;
-      padding: 8px 20px; font-size: 13px; color: var(--text-sm);
-      display: flex; align-items: center; gap: 7px;
-      box-shadow: 0 2px 6px rgba(13,35,64,0.06);
+    .facility-badges {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 52px; justify-content: center;
     }
-    .facility-badge .fi { font-size: 18px; }
+    .facility-badge {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(13,157,181,0.25);
+      border-radius: 999px; padding: 9px 22px;
+      font-size: 13px; color: rgba(255,255,255,0.7);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .facility-badge .fi { font-size: 16px; }
 
     /* ── ABOUT ── */
+    #about { background: var(--offwhite); }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 52px; }
     .about-table { width: 100%; border-collapse: collapse; }
     .about-table tr { border-bottom: 1px solid var(--gray-lt); }
     .about-table td { padding: 14px 0; font-size: 14px; vertical-align: top; }
-    .about-table td:first-child { color: var(--gray); width: 120px; font-weight: 500; }
-    .about-message { background: var(--navy); border-radius: 8px; padding: 36px 32px; }
-    .about-message blockquote { font-family: 'Noto Serif JP', serif; font-size: 16px; color: rgba(255,255,255,0.9); line-height: 2; }
-    .about-message cite { display: block; margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.5); font-style: normal; }
+    .about-table td:first-child { color: var(--gray); width: 110px; font-weight: 500; font-size: 13px; }
+    .about-message {
+      background: var(--navy);
+      border-radius: 12px; padding: 38px 34px;
+      border: 1px solid rgba(13,157,181,0.2);
+    }
+    .about-message blockquote {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 15px; color: rgba(255,255,255,0.88);
+      line-height: 2.1;
+    }
+    .about-message cite {
+      display: block; margin-top: 22px;
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      font-style: normal;
+    }
 
     /* ── CONTACT ── */
-    .contact-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: 60px; align-items: start; }
-    .contact-info h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
-    .contact-info p { font-size: 14px; color: var(--text-sm); line-height: 1.9; }
-    .contact-detail { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
-    .contact-detail-item { display: flex; gap: 12px; align-items: flex-start; }
-    .contact-detail-item .ic { width: 32px; height: 32px; border-radius: 6px; background: rgba(26,122,138,0.1); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-    .contact-detail-item div { font-size: 13px; color: var(--text-sm); }
-    .contact-detail-item div strong { display: block; color: var(--navy); font-size: 14px; margin-bottom: 2px; }
-    .contact-form { background: white; border: 1px solid var(--gray-lt); border-radius: 10px; padding: 40px 36px; }
-    .contact-form h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 28px; }
+    #contact { background: var(--navy); }
+    #contact .section-label { color: var(--teal-lt); }
+    #contact .section-label::before { background: var(--teal-lt); }
+    #contact .section-title { color: white; }
+    #contact .section-body { color: rgba(255,255,255,0.6); }
+
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1.6fr; gap: 60px; align-items: start; margin-top: 52px; }
+    .contact-info h3 { font-size: 17px; font-weight: 700; color: white; margin-bottom: 14px; }
+    .contact-info > p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.9; }
+    .contact-detail { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+    .contact-detail-item { display: flex; gap: 14px; align-items: flex-start; }
+    .contact-detail-item .ic {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(13,157,181,0.15);
+      border: 1px solid rgba(13,157,181,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .contact-detail-item div { font-size: 13px; color: rgba(255,255,255,0.55); }
+    .contact-detail-item div strong { display: block; color: white; font-size: 13px; margin-bottom: 2px; }
+
+    .contact-form {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(13,157,181,0.2);
+      border-radius: 14px; padding: 40px 36px;
+    }
+    .contact-form h3 { font-size: 17px; font-weight: 700; color: white; margin-bottom: 28px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 7px; }
-    .form-group label .req { color: var(--teal); margin-left: 4px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; border: 1px solid #d0dae4; border-radius: 5px; padding: 11px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; color: var(--text); background: #fafbfc; transition: border-color .2s, box-shadow .2s; outline: none; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(26,122,138,0.12); background: white; }
-    .form-group textarea { resize: vertical; min-height: 130px; }
-    .form-group select { appearance: none; cursor: pointer; }
-    .form-submit { width: 100%; background: var(--navy); color: white; border: none; padding: 14px; border-radius: 5px; font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background .2s; }
-    .form-submit:hover { background: var(--teal); }
-    .form-note { font-size: 12px; color: var(--gray); text-align: center; margin-top: 12px; line-height: 1.7; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.55); margin-bottom: 7px; letter-spacing: 0.04em; }
+    .form-group label .req { color: var(--teal-lt); margin-left: 4px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 7px; padding: 11px 14px;
+      font-family: 'Noto Sans JP', sans-serif; font-size: 14px;
+      color: white; background: rgba(255,255,255,0.06);
+      transition: border-color .2s, box-shadow .2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,157,181,0.2);
+      background: rgba(255,255,255,0.09);
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+    .form-group select { appearance: none; cursor: pointer; color: rgba(255,255,255,0.7); }
+    .form-group select option { background: var(--navy-mid); color: white; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit {
+      width: 100%; background: var(--teal); color: white; border: none;
+      padding: 14px; border-radius: 7px;
+      font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 500;
+      cursor: pointer; margin-top: 6px;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(13,157,181,0.3);
+    }
+    .form-submit:hover { background: var(--teal-lt); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(13,157,181,0.4); }
+    .form-note { font-size: 12px; color: rgba(255,255,255,0.3); text-align: center; margin-top: 12px; line-height: 1.7; }
 
     /* toast */
-    #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--teal); color: white; padding: 14px 28px; border-radius: 6px; font-size: 14px; font-weight: 500; box-shadow: 0 6px 24px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; z-index: 200; }
+    #toast {
+      position: fixed; bottom: 30px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--teal); color: white;
+      padding: 14px 28px; border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      box-shadow: 0 6px 24px rgba(13,157,181,0.4);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s, transform .3s; z-index: 200;
+    }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ── FOOTER ── */
-    footer { background: var(--navy); padding: 56px 5% 28px; color: rgba(255,255,255,0.6); }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 28px; }
-    .footer-brand p { font-size: 13px; line-height: 1.85; margin-top: 14px; color: rgba(255,255,255,0.5); }
-    footer h4 { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    footer {
+      background: #030d18;
+      padding: 60px 5% 28px;
+      border-top: 1px solid rgba(13,157,181,0.15);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px;
+      padding-bottom: 44px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 28px;
+    }
+    .footer-brand p { font-size: 13px; line-height: 1.85; margin-top: 16px; color: rgba(255,255,255,0.4); }
+    .footer-logo { display: flex; align-items: center; gap: 14px; }
+    .footer-logo img { width: 36px; height: 36px; object-fit: contain; filter: invert(1) brightness(2); opacity: 0.7; }
+    footer h4 { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 18px; }
     footer ul { list-style: none; }
     footer ul li { margin-bottom: 10px; }
-    footer ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; transition: color .2s; }
+    footer ul li a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; transition: color .2s; }
     footer ul li a:hover { color: var(--teal-lt); }
-    .footer-copy { font-size: 12px; text-align: center; color: rgba(255,255,255,0.3); }
-    .footer-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .footer-logo img { width: 36px; height: 36px; object-fit: contain; filter: invert(1) brightness(2); opacity: 0.8; }
+    .footer-copy { font-size: 12px; text-align: center; color: rgba(255,255,255,0.25); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .services-3col { grid-template-columns: 1fr; }
+      .feature-bar { grid-template-columns: 1fr 1fr; gap: 16px; }
     }
     @media (max-width: 768px) {
       header { padding: 0 4%; }
       nav a:not(.cta-nav) { display: none; }
-      .hero { grid-template-columns: 1fr; padding-top: 100px; overflow: hidden; }
-      .wave-rings { max-width: 280px; opacity: 0.6; }
+      .hero-content { padding: 120px 4% 60px; }
+      .hero-title { font-size: clamp(30px, 8vw, 44px); }
       .about-grid, .contact-wrap { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; }
       .contact-form { padding: 28px 22px; }
-      .hero-content { padding: 28px 24px; }
+      .feature-bar { grid-template-columns: 1fr; }
+      .feature-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 12px 0; }
     }
   </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<header>
+<header id="main-header">
   <a class="logo" href="#top">
     <img src="logo.png" alt="エスエス技研ロゴ">
     <div class="logo-text">
@@ -258,18 +404,19 @@
     <a href="products.html">開発システム</a>
     <a href="ri_surface_check.html">🔬 測定ツール</a>
     <a href="#about">会社概要</a>
-    <a href="#contact" class="cta-nav">お問い合わせ</a>
+    <a href="#contact" class="cta-nav">✉ お問い合わせ</a>
   </nav>
 </header>
 
 <!-- HERO -->
 <section id="top" class="hero">
+  <div class="hero-bg" id="hero-bg"></div>
   <div class="hero-content">
     <p class="hero-eyebrow" id="d-eyebrow">Radiation Measurement &amp; Protection</p>
     <h1 class="hero-title" id="d-hero-title">
       放射線から<br>
-      <span>守る技術</span>と<br>
-      <span>正確な測定</span>を。
+      <span class="accent">守る技術</span>と<br>
+      <span class="accent">正確な測定</span>を。
     </h1>
     <p class="hero-body" id="d-hero-body">
       エスエス技研株式会社は、放射線測定・管理・報告業務の専門会社として、
@@ -277,16 +424,47 @@
       確かな技術と誠実な対応で、お客様の安全管理を支えます。
     </p>
     <div class="hero-btns">
-      <a href="#services" class="btn-primary" id="d-btn-primary">事業内容を見る</a>
-      <a href="#contact" class="btn-outline" id="d-btn-outline">お問い合わせ</a>
+      <a href="#services" class="btn-primary" id="d-btn-primary">
+        <span>⊙</span> 事業内容を見る
+      </a>
+      <a href="#contact" class="btn-outline" id="d-btn-outline">
+        <span>✉</span> お問い合わせ
+      </a>
     </div>
   </div>
-  <div class="wave-rings" aria-hidden="true">
-    <div class="ring-dot"></div>
-    <div class="ring"></div><div class="ring"></div>
-    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
-  </div>
 </section>
+
+<!-- 特徴バー -->
+<div class="feature-bar">
+  <div class="feature-item">
+    <div class="feature-icon">🛡️</div>
+    <div>
+      <h4>確かな信頼と実績</h4>
+      <p>長年の経験と専門知識で<br>安心・安全をサポート</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">🎯</div>
+    <div>
+      <h4>高精度な測定技術</h4>
+      <p>最新機器と精密な技術で<br>正確な測定を実現</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">👥</div>
+    <div>
+      <h4>トータルサポート</h4>
+      <p>測定から報告まで<br>一貫したサポート体制</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">📋</div>
+    <div>
+      <h4>法令・基準に準拠</h4>
+      <p>最新の法令・基準に準拠した<br>適切な運用を支援</p>
+    </div>
+  </div>
+</div>
 
 <!-- SERVICES -->
 <section id="services">
@@ -295,10 +473,9 @@
   <p class="section-body">放射線測定から施設管理・コンサルティングまで、放射線安全に関わるあらゆる業務をワンストップでサポートします。</p>
 
   <div class="services-3col">
-
     <!-- 作業環境測定 -->
     <div class="service-pillar">
-      <div class="pillar-header color-blue">
+      <div class="pillar-header">
         <img src="images/illust_measurement.jpg" alt="作業環境測定" class="pillar-img">
         <div class="pillar-overlay">
           <span class="pillar-icon">🔬</span>
@@ -310,35 +487,24 @@
         <ul class="pillar-items">
           <li class="pillar-item">
             <div class="item-num">1</div>
-            <div class="item-content">
-              <h4>RI表面汚染測定（スミア法）</h4>
-              <p>作業台や機器表面の放射性物質の付着状況を測定します。</p>
-            </div>
+            <div class="item-content"><h4>RI表面汚染測定（スミア法）</h4><p>作業台や機器表面の放射性物質の付着状況を測定します。</p></div>
           </li>
           <li class="pillar-item">
             <div class="item-num">2</div>
-            <div class="item-content">
-              <h4>RI空気中濃度測定（エアサンプラー）</h4>
-              <p>空気中の放射性物質濃度を測定し、作業環境を評価します。</p>
-            </div>
+            <div class="item-content"><h4>RI空気中濃度測定（エアサンプラー）</h4><p>空気中の放射性物質濃度を測定し、作業環境を評価します。</p></div>
           </li>
           <li class="pillar-item">
             <div class="item-num">3</div>
-            <div class="item-content">
-              <h4>排水中濃度測定</h4>
-              <p>RI施設からの排水に含まれる放射性物質の濃度を測定します。</p>
-            </div>
+            <div class="item-content"><h4>排水中濃度測定</h4><p>RI施設からの排水に含まれる放射性物質の濃度を測定します。</p></div>
           </li>
         </ul>
       </div>
-      <div class="pillar-footer">
-        <strong>対応施設：</strong>医療機関・研究施設・教育機関・RI取扱事業所
-      </div>
+      <div class="pillar-footer"><strong>対応：</strong>医療機関・研究施設・教育機関・RI取扱事業所</div>
     </div>
 
     <!-- 漏洩線量測定 -->
     <div class="service-pillar">
-      <div class="pillar-header color-teal">
+      <div class="pillar-header">
         <img src="images/illust_leakage.jpg" alt="漏洩線量測定" class="pillar-img">
         <div class="pillar-overlay">
           <span class="pillar-icon">📡</span>
@@ -350,42 +516,28 @@
         <ul class="pillar-items">
           <li class="pillar-item">
             <div class="item-num sq">X線</div>
-            <div class="item-content">
-              <h4>X線診察室</h4>
-              <p>X線装置からの漏洩線量を測定し、遮蔽性能の確認を行います。</p>
-            </div>
+            <div class="item-content"><h4>X線診察室</h4><p>X線装置からの漏洩線量を測定し、遮蔽性能の確認を行います。</p></div>
           </li>
           <li class="pillar-item">
             <div class="item-num sq">CT</div>
-            <div class="item-content">
-              <h4>CT室</h4>
-              <p>CT装置周辺の漏洩線量を測定し、管理区域の安全を確認します。</p>
-            </div>
+            <div class="item-content"><h4>CT室</h4><p>CT装置周辺の漏洩線量を測定し、管理区域の安全を確認します。</p></div>
           </li>
           <li class="pillar-item">
             <div class="item-num sq">IVR</div>
-            <div class="item-content">
-              <h4>血管撮影室（IVR室）</h4>
-              <p>透視・撮影中の漏洩線量を測定し、作業者や周辺環境の安全を確認します。</p>
-            </div>
+            <div class="item-content"><h4>血管撮影室（IVR室）</h4><p>透視・撮影中の漏洩線量を測定し、安全を確認します。</p></div>
           </li>
           <li class="pillar-item">
             <div class="item-num sq">RT</div>
-            <div class="item-content">
-              <h4>放射線治療室</h4>
-              <p>治療装置からの漏洩線量を測定し、遮蔽やインターロック等の安全性を確認します。</p>
-            </div>
+            <div class="item-content"><h4>放射線治療室</h4><p>治療装置からの漏洩線量を測定し、インターロック等の安全性を確認します。</p></div>
           </li>
         </ul>
       </div>
-      <div class="pillar-footer">
-        測定結果をもとに<strong>適切な評価・ご提案</strong>をいたします。
-      </div>
+      <div class="pillar-footer">測定結果をもとに<strong>適切な評価・ご提案</strong>をいたします。</div>
     </div>
 
-    <!-- 施設管理・コンサルティング -->
+    <!-- 施設管理 -->
     <div class="service-pillar">
-      <div class="pillar-header color-gold">
+      <div class="pillar-header">
         <img src="images/illust_consulting.jpg" alt="施設管理・コンサルティング" class="pillar-img">
         <div class="pillar-overlay">
           <span class="pillar-icon">🏗️</span>
@@ -396,50 +548,31 @@
       <div class="pillar-body">
         <ul class="pillar-items">
           <li class="pillar-item">
-            <div class="item-num" style="background:var(--gold)">🔧</div>
-            <div class="item-content">
-              <h4>RI施設の設備点検</h4>
-              <p>放射線監視モニタ、排気・排水設備の定期点検を行います。</p>
-            </div>
+            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">🔧</div>
+            <div class="item-content"><h4>RI施設の設備点検</h4><p>放射線監視モニタ、排気・排水設備の定期点検を行います。</p></div>
           </li>
           <li class="pillar-item">
-            <div class="item-num" style="background:var(--gold)">📐</div>
-            <div class="item-content">
-              <h4>RI施設の設計コンサルタント</h4>
-              <p>各種申請書類の作成、施設設計を支援します。</p>
-            </div>
+            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">📐</div>
+            <div class="item-content"><h4>RI施設の設計コンサルタント</h4><p>各種申請書類の作成、施設設計を支援します。</p></div>
           </li>
           <li class="pillar-item">
-            <div class="item-num" style="background:var(--gold)">👥</div>
-            <div class="item-content">
-              <h4>RI施設の受託管理</h4>
-              <p>専任従事者が不在の事業所様を対象に、RI管理業務を受託します。</p>
-            </div>
+            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">👥</div>
+            <div class="item-content"><h4>RI施設の受託管理</h4><p>専任従事者が不在の事業所様を対象に、RI管理業務を受託します。</p></div>
           </li>
           <li class="pillar-item">
-            <div class="item-num" style="background:var(--gold)">🧮</div>
-            <div class="item-content">
-              <h4>遮蔽・換気・排水計算</h4>
-              <p>放射線施設の遮蔽計算、換気計算、排水計算を行います。</p>
-            </div>
+            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">🧮</div>
+            <div class="item-content"><h4>遮蔽・換気・排水計算</h4><p>放射線施設の遮蔽計算、換気計算、排水計算を行います。</p></div>
           </li>
           <li class="pillar-item">
-            <div class="item-num" style="background:var(--gold)">♻️</div>
-            <div class="item-content">
-              <h4>除染・廃止措置</h4>
-              <p>施設の解体・廃止に伴う除染および廃棄物処理まで対応します。</p>
-            </div>
+            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">♻️</div>
+            <div class="item-content"><h4>除染・廃止措置</h4><p>施設の解体・廃止に伴う除染および廃棄物処理まで対応します。</p></div>
           </li>
         </ul>
       </div>
-      <div class="pillar-footer">
-        <strong>安全・確実な管理で、環境保全に貢献します。</strong>
-      </div>
+      <div class="pillar-footer"><strong>安全・確実な管理で、環境保全に貢献します。</strong></div>
     </div>
+  </div>
 
-  </div><!-- /services-3col -->
-
-  <!-- 対応施設 -->
   <div class="facility-badges">
     <div class="facility-badge"><span class="fi">🏥</span>医療機関（病院・クリニック）</div>
     <div class="facility-badge"><span class="fi">🔬</span>研究施設</div>
@@ -479,10 +612,10 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" style="background:var(--offwhite)">
+<section id="contact">
   <p class="section-label">Contact</p>
   <h2 class="section-title">お問い合わせ</h2>
-  <p class="section-body" style="margin-bottom:48px">測定のご依頼・お見積り・ご相談など、お気軽にご連絡ください。通常2営業日以内にご返答いたします。</p>
+  <p class="section-body">測定のご依頼・お見積り・ご相談など、お気軽にご連絡ください。通常2営業日以内にご返答いたします。</p>
   <div class="contact-wrap">
     <div class="contact-info">
       <h3>お気軽にご相談ください</h3>
@@ -503,7 +636,7 @@
       </div>
     </div>
     <div class="contact-form">
-      <h3>✉️ メールフォーム</h3>
+      <h3>✉ メールフォーム</h3>
       <div class="form-row">
         <div class="form-group"><label>お名前<span class="req">*</span></label><input type="text" id="f-name" placeholder="山田 太郎"></div>
         <div class="form-group"><label>会社・施設名</label><input type="text" id="f-org" placeholder="〇〇病院"></div>
@@ -541,8 +674,8 @@
       <div class="footer-logo">
         <img src="logo.png" alt="エスエス技研ロゴ">
         <div class="logo-text">
-          <span class="en" style="color:rgba(255,255,255,0.5)">SS GIKEN Co., Ltd.</span>
-          <span class="ja" style="color:white">エスエス技研株式会社</span>
+          <span class="en" style="color:rgba(255,255,255,0.4)">SS GIKEN Co., Ltd.</span>
+          <span class="ja" style="color:rgba(255,255,255,0.85)">エスエス技研株式会社</span>
         </div>
       </div>
       <p>放射線測定・防護の専門家として、<br>安全な環境づくりをサポートします。</p>
@@ -571,7 +704,20 @@
 <div id="toast">✔ 送信が完了しました。2営業日以内にご連絡いたします。</div>
 
 <script>
-  // ── site_data.json からコンテンツを反映 ──
+  // ヘッダースクロール処理
+  const header = document.getElementById('main-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 50);
+  });
+  // 初期状態でもscrolledを適用
+  header.classList.add('scrolled');
+
+  // ヒーロー背景のケン・バーンズ効果
+  window.addEventListener('load', () => {
+    document.getElementById('hero-bg').style.transform = 'scale(1)';
+  });
+
+  // site_data.json からコンテンツを反映
   (async () => {
     try {
       const res = await fetch('/api/data');
@@ -585,25 +731,21 @@
       setT('d-btn-outline', h.btn_outline);
       if (h.title_line1 || h.title_line2 || h.title_line3) {
         document.getElementById('d-hero-title').innerHTML =
-          `${h.title_line1||''}<br><span>${h.title_line2||''}</span>${h.title_line3?'<br><span>'+h.title_line3+'</span>':''}`;
+          `${h.title_line1||''}<br><span class="accent">${h.title_line2||''}</span>${h.title_line3?'<br><span class="accent">'+h.title_line3+'</span>':''}`;
       }
-      setT('d-name', c.name);
-      setT('d-name-en', c.name_en);
+      setT('d-name', c.name); setT('d-name-en', c.name_en);
       if (c.zip || c.address)
         document.getElementById('d-address').innerHTML = `〒${c.zip||''}<br>${c.address||''}`;
-      setT('d-tel', c.tel);
-      setT('d-fax', c.fax);
-      setT('d-tel2', c.tel);
-      setT('d-fax2', c.fax);
-      setT('d-address2', c.address);
-      setT('d-hours', c.business_hours);
+      setT('d-tel', c.tel); setT('d-fax', c.fax);
+      setT('d-tel2', c.tel); setT('d-fax2', c.fax);
+      setT('d-address2', c.address); setT('d-hours', c.business_hours);
       setT('d-message', c.message);
       if (c.message_author)
         document.getElementById('d-message-author').textContent = '— ' + c.message_author;
     } catch(e) {}
   })();
 
-  // ── フォーム送信 ──
+  // フォーム送信
   function submitForm() {
     const name  = document.getElementById('f-name').value.trim();
     const email = document.getElementById('f-email').value.trim();
@@ -626,7 +768,7 @@
       const target = document.querySelector(a.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
-      window.scrollTo({ top: target.offsetTop - 68, behavior: 'smooth' });
+      window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
     });
   });
 </script>
