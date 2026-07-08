@@ -174,84 +174,137 @@
     }
     .section-body { font-size: 15px; color: var(--text-sm); max-width: 600px; line-height: 1.9; }
 
-    /* ── SERVICES ── */
-    #services { background: var(--navy); padding: 100px 5%; }
-    #services .section-label { color: var(--teal-lt); }
-    #services .section-label::before { background: var(--teal-lt); }
-    #services .section-title { color: white; }
-    #services .section-body { color: rgba(255,255,255,0.6); }
+    /* ── SERVICES 新デザイン ── */
+    #services { background: #f5f8fc; padding: 100px 5%; }
+    #services .section-label { color: var(--teal); }
+    #services .section-label::before { background: var(--teal); }
+    #services .section-title { color: var(--navy); }
+    #services .section-body { color: var(--text-sm); }
 
     .services-3col {
       display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 24px; margin-top: 56px;
+      gap: 24px; margin-top: 48px;
     }
     .service-pillar {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(13,157,181,0.2);
-      border-radius: 14px; overflow: hidden;
-      transition: border-color .25s, transform .25s, box-shadow .25s;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(10,32,64,0.08);
+      border: 1px solid #e2eaf4;
+      transition: transform .25s, box-shadow .25s;
+      display: flex; flex-direction: column;
     }
     .service-pillar:hover {
-      border-color: rgba(13,157,181,0.6);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(13,157,181,0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(10,32,64,0.14);
     }
-    .pillar-header { padding: 0; position: relative; overflow: hidden; }
-    .pillar-img {
-      width: 100%; height: 200px;
-      object-fit: cover; object-position: top;
-      display: block; opacity: 0.5;
-      transition: opacity .3s, transform .4s;
-    }
-    .service-pillar:hover .pillar-img { opacity: 0.65; transform: scale(1.04); }
-    .pillar-overlay {
-      padding: 22px 24px 18px;
-      background: linear-gradient(135deg, rgba(10,32,64,0.95), rgba(13,122,142,0.85));
-    }
-    .pillar-icon { font-size: 28px; margin-bottom: 10px; display: block; }
-    .pillar-overlay h3 {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 18px; font-weight: 600; color: white; margin-bottom: 6px;
-    }
-    .pillar-overlay p { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.7; }
 
-    .pillar-body { padding: 20px 24px 24px; }
-    .pillar-items { list-style: none; }
-    .pillar-item {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    /* カードヘッダー */
+    .pillar-header-new {
+      padding: 18px 22px;
+      display: flex; align-items: center; gap: 14px;
     }
-    .pillar-item:last-child { border-bottom: none; }
-    .item-num {
-      width: 24px; height: 24px; border-radius: 50%;
+    .pillar-header-new.color-teal { background: var(--teal); }
+    .pillar-header-new.color-gold { background: #e8920a; }
+    .pillar-header-icon { font-size: 32px; flex-shrink: 0; }
+    .pillar-header-new h3 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 3px; }
+    .pillar-catch { font-size: 12px; color: rgba(255,255,255,0.82); }
+
+    /* イラスト */
+    .pillar-illust {
+      width: 100%; background: #f0f6fa;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .pillar-illust img {
+      width: 100%; height: 180px;
+      object-fit: cover; object-position: center top;
+      transition: transform .4s ease;
+    }
+    .service-pillar:hover .pillar-illust img { transform: scale(1.04); }
+
+    /* カード本体 */
+    .pillar-body-new { padding: 20px 22px; flex: 1; display: flex; flex-direction: column; }
+    .pillar-desc { font-size: 13px; color: var(--text-sm); margin-bottom: 16px; line-height: 1.7; }
+
+    /* リスト */
+    .pillar-items-new { list-style: none; display: flex; flex-direction: column; gap: 0; flex: 1; }
+    .pillar-items-new li {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid #edf2f8;
+    }
+    .pillar-items-new li:last-child { border-bottom: none; }
+    .pillar-items-new li strong { font-size: 13px; color: var(--navy); display: block; margin-bottom: 2px; }
+    .pillar-items-new li p { font-size: 12px; color: var(--text-sm); line-height: 1.65; }
+
+    .num-badge {
+      min-width: 24px; height: 24px; border-radius: 50%;
       background: var(--teal); color: white;
-      font-size: 11px; font-weight: 700;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .sq-badge {
+      min-width: 36px; height: 22px; border-radius: 4px;
+      background: rgba(13,157,181,0.12); color: var(--teal);
+      font-size: 10px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; margin-top: 2px;
+      border: 1px solid rgba(13,157,181,0.3);
+      letter-spacing: 0.02em;
     }
-    .item-num.sq { border-radius: 4px; background: rgba(13,157,181,0.25); color: var(--teal-lt); font-size: 10px; border: 1px solid rgba(13,157,181,0.4); }
-    .item-content h4 { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 3px; }
-    .item-content p  { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.65; }
-    .pillar-footer {
-      padding: 12px 24px 16px;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      font-size: 12px; color: rgba(255,255,255,0.45);
+    .icon-badge {
+      font-size: 18px; flex-shrink: 0; margin-top: 1px;
+      width: 28px; text-align: center;
     }
-    .pillar-footer strong { color: var(--teal-lt); }
 
-    /* 対応施設バッジ */
-    .facility-badges {
-      display: flex; gap: 10px; flex-wrap: wrap;
-      margin-top: 52px; justify-content: center;
+    /* フッターエリア */
+    .pillar-facility {
+      margin-top: 14px; padding: 12px 14px;
+      background: #f0f6fa; border-radius: 8px;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 3px solid var(--teal);
     }
-    .facility-badge {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(13,157,181,0.25);
-      border-radius: 999px; padding: 9px 22px;
-      font-size: 13px; color: rgba(255,255,255,0.7);
-      display: flex; align-items: center; gap: 8px;
+    .pillar-facility--check { border-left-color: var(--teal); }
+    .pillar-facility--gold { border-left-color: #e8920a; background: #fff8ee; }
+    .facility-icon { font-size: 20px; flex-shrink: 0; }
+    .pillar-facility strong { font-size: 12px; color: var(--navy); display: block; margin-bottom: 2px; }
+    .pillar-facility p { font-size: 12px; color: var(--text-sm); line-height: 1.6; }
+    .pillar-facility--check p strong { color: var(--teal); }
+    .pillar-facility--gold p strong { color: #e8920a; }
+
+    /* 私たちの強みバー */
+    .strengths-bar {
+      margin-top: 48px;
+      background: white;
+      border: 1px solid #e2eaf4;
+      border-radius: 12px;
+      padding: 22px 32px;
+      display: flex; align-items: center; gap: 0;
+      box-shadow: 0 2px 12px rgba(10,32,64,0.06);
     }
-    .facility-badge .fi { font-size: 16px; }
+    .strength-label {
+      font-size: 13px; font-weight: 700; color: var(--teal);
+      padding-right: 28px; border-right: 2px solid #e2eaf4;
+      margin-right: 28px; white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .strength-item {
+      display: flex; align-items: center; gap: 10px;
+      flex: 1; padding: 0 20px;
+      border-right: 1px solid #e2eaf4;
+    }
+    .strength-item:last-child { border-right: none; }
+    .strength-item > span { font-size: 26px; flex-shrink: 0; }
+    .strength-item strong { font-size: 12px; color: var(--navy); display: block; }
+    .strength-item p { font-size: 11px; color: var(--gray); }
+
+    @media (max-width: 900px) {
+      .services-3col { grid-template-columns: 1fr; }
+      .strengths-bar { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .strength-label { border-right: none; border-bottom: 2px solid #e2eaf4; padding-bottom: 12px; }
+      .strength-item { border-right: none; padding: 0; }
+    }
 
     /* ── ABOUT ── */
     #about { background: var(--offwhite); }
@@ -469,116 +522,103 @@
 <!-- SERVICES -->
 <section id="services">
   <p class="section-label">Services</p>
-  <h2 class="section-title">事業内容</h2>
-  <p class="section-body">放射線測定から施設管理・コンサルティングまで、放射線安全に関わるあらゆる業務をワンストップでサポートします。</p>
+  <h2 class="section-title">放射線の安全管理をトータルサポート</h2>
+  <p class="section-body">測定・評価から管理・コンサルティングまで、施設の安心・安全を支えます。</p>
 
   <div class="services-3col">
+
     <!-- 作業環境測定 -->
     <div class="service-pillar">
-      <div class="pillar-header">
-        <img src="images/illust_measurement.jpg" alt="作業環境測定" class="pillar-img">
-        <div class="pillar-overlay">
-          <span class="pillar-icon">🔬</span>
+      <div class="pillar-header-new color-teal">
+        <div class="pillar-header-icon">☢️</div>
+        <div>
           <h3>作業環境測定</h3>
-          <p>放射線施設の安全管理を支える各種測定を実施します。</p>
+          <p class="pillar-catch">放射線の"見えないリスク"を見える化</p>
         </div>
       </div>
-      <div class="pillar-body">
-        <ul class="pillar-items">
-          <li class="pillar-item">
-            <div class="item-num">1</div>
-            <div class="item-content"><h4>RI表面汚染測定（スミア法）</h4><p>作業台や機器表面の放射性物質の付着状況を測定します。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num">2</div>
-            <div class="item-content"><h4>RI空気中濃度測定（エアサンプラー）</h4><p>空気中の放射性物質濃度を測定し、作業環境を評価します。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num">3</div>
-            <div class="item-content"><h4>排水中濃度測定</h4><p>RI施設からの排水に含まれる放射性物質の濃度を測定します。</p></div>
-          </li>
-        </ul>
+      <div class="pillar-illust">
+        <img src="images/service_measurement_new.jpg" alt="作業環境測定イラスト">
       </div>
-      <div class="pillar-footer"><strong>対応：</strong>医療機関・研究施設・教育機関・RI取扱事業所</div>
+      <div class="pillar-body-new">
+        <p class="pillar-desc">放射線施設の安全管理を支える各種測定を実施します。</p>
+        <ul class="pillar-items-new">
+          <li><span class="num-badge">1</span><div><strong>RI表面汚染測定（スミア法）</strong><p>作業台や機器表面の放射性物質の付着状況を測定します。</p></div></li>
+          <li><span class="num-badge">2</span><div><strong>RI空気中濃度測定（エアサンプラー）</strong><p>空気中の放射性物質濃度を測定し、作業環境を評価します。</p></div></li>
+          <li><span class="num-badge">3</span><div><strong>排水中濃度測定</strong><p>RI施設からの排水に含まれる放射性物質の濃度を測定します。</p></div></li>
+        </ul>
+        <div class="pillar-facility">
+          <span class="facility-icon">🏢</span>
+          <div><strong>対応施設</strong><p>医療機関・研究施設・教育機関・RI取扱事業所</p></div>
+        </div>
+      </div>
     </div>
 
     <!-- 漏洩線量測定 -->
     <div class="service-pillar">
-      <div class="pillar-header">
-        <img src="images/illust_leakage.jpg" alt="漏洩線量測定" class="pillar-img">
-        <div class="pillar-overlay">
-          <span class="pillar-icon">📡</span>
+      <div class="pillar-header-new color-teal">
+        <div class="pillar-header-icon">📡</div>
+        <div>
           <h3>漏洩線量測定</h3>
-          <p>各種放射線装置の漏洩線量を測定し、施設の安全を確認します。</p>
+          <p class="pillar-catch">放射線の漏洩をチェックし、安全を確認</p>
         </div>
       </div>
-      <div class="pillar-body">
-        <ul class="pillar-items">
-          <li class="pillar-item">
-            <div class="item-num sq">X線</div>
-            <div class="item-content"><h4>X線診察室</h4><p>X線装置からの漏洩線量を測定し、遮蔽性能の確認を行います。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num sq">CT</div>
-            <div class="item-content"><h4>CT室</h4><p>CT装置周辺の漏洩線量を測定し、管理区域の安全を確認します。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num sq">IVR</div>
-            <div class="item-content"><h4>血管撮影室（IVR室）</h4><p>透視・撮影中の漏洩線量を測定し、安全を確認します。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num sq">RT</div>
-            <div class="item-content"><h4>放射線治療室</h4><p>治療装置からの漏洩線量を測定し、インターロック等の安全性を確認します。</p></div>
-          </li>
-        </ul>
+      <div class="pillar-illust">
+        <img src="images/service_leakage_new.jpg" alt="漏洩線量測定イラスト">
       </div>
-      <div class="pillar-footer">測定結果をもとに<strong>適切な評価・ご提案</strong>をいたします。</div>
+      <div class="pillar-body-new">
+        <p class="pillar-desc">各種放射線装置の漏洩線量を測定し、施設の安全を確認します。</p>
+        <ul class="pillar-items-new">
+          <li><span class="sq-badge">X線</span><div><strong>X線診察室</strong><p>X線装置からの漏洩線量を測定し、遮蔽性能の確認を行います。</p></div></li>
+          <li><span class="sq-badge">CT</span><div><strong>CT室</strong><p>CT装置周辺の漏洩線量を測定し、管理区域の安全を確認します。</p></div></li>
+          <li><span class="sq-badge">IVR</span><div><strong>血管撮影室（IVR室）</strong><p>透視・撮影中の漏洩線量を測定し、安全を確認します。</p></div></li>
+          <li><span class="sq-badge">RT</span><div><strong>放射線治療室</strong><p>治療装置からの漏洩線量を測定し、インターロック等の安全性を確認します。</p></div></li>
+        </ul>
+        <div class="pillar-facility pillar-facility--check">
+          <span class="facility-icon">✅</span>
+          <div><p>測定結果をもとに<strong>適切な評価・ご提案</strong>をいたします。</p></div>
+        </div>
+      </div>
     </div>
 
     <!-- 施設管理 -->
     <div class="service-pillar">
-      <div class="pillar-header">
-        <img src="images/illust_consulting.jpg" alt="施設管理・コンサルティング" class="pillar-img">
-        <div class="pillar-overlay">
-          <span class="pillar-icon">🏗️</span>
+      <div class="pillar-header-new color-gold">
+        <div class="pillar-header-icon">📋</div>
+        <div>
           <h3>施設管理・コンサルティング</h3>
-          <p>設計から運用、廃止までトータルでサポートします。</p>
+          <p class="pillar-catch">運用から改善まで、安心のパートナー</p>
         </div>
       </div>
-      <div class="pillar-body">
-        <ul class="pillar-items">
-          <li class="pillar-item">
-            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">🔧</div>
-            <div class="item-content"><h4>RI施設の設備点検</h4><p>放射線監視モニタ、排気・排水設備の定期点検を行います。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">📐</div>
-            <div class="item-content"><h4>RI施設の設計コンサルタント</h4><p>各種申請書類の作成、施設設計を支援します。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">👥</div>
-            <div class="item-content"><h4>RI施設の受託管理</h4><p>専任従事者が不在の事業所様を対象に、RI管理業務を受託します。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">🧮</div>
-            <div class="item-content"><h4>遮蔽・換気・排水計算</h4><p>放射線施設の遮蔽計算、換気計算、排水計算を行います。</p></div>
-          </li>
-          <li class="pillar-item">
-            <div class="item-num" style="background:rgba(13,157,181,0.3);color:var(--teal-lt);font-size:14px;">♻️</div>
-            <div class="item-content"><h4>除染・廃止措置</h4><p>施設の解体・廃止に伴う除染および廃棄物処理まで対応します。</p></div>
-          </li>
-        </ul>
+      <div class="pillar-illust">
+        <img src="images/service_consulting_new.jpg" alt="施設管理イラスト">
       </div>
-      <div class="pillar-footer"><strong>安全・確実な管理で、環境保全に貢献します。</strong></div>
+      <div class="pillar-body-new">
+        <p class="pillar-desc">設計から運用、廃止までトータルでサポートします。</p>
+        <ul class="pillar-items-new pillar-items-new--icon">
+          <li><span class="icon-badge">🔧</span><div><strong>RI施設の設備点検</strong><p>放射線監視モニタ、排気・排水設備の定期点検を行います。</p></div></li>
+          <li><span class="icon-badge">📐</span><div><strong>RI施設の設計コンサルタント</strong><p>各種申請書類の作成、施設設計を支援します。</p></div></li>
+          <li><span class="icon-badge">👥</span><div><strong>RI施設の受託管理</strong><p>専任従事者が不在の事業所様を対象に、RI管理業務を受託します。</p></div></li>
+          <li><span class="icon-badge">🧮</span><div><strong>遮蔽・換気・排水計算</strong><p>放射線施設の遮蔽計算、換気計算、排水計算を行います。</p></div></li>
+          <li><span class="icon-badge">♻️</span><div><strong>除染・廃止措置</strong><p>施設の解体・廃止に伴う除染および廃棄物処理まで対応します。</p></div></li>
+        </ul>
+        <div class="pillar-facility pillar-facility--gold">
+          <span class="facility-icon">🛡️</span>
+          <div><p><strong>安全・確実な管理で、環境保全に貢献します。</strong></p></div>
+        </div>
+      </div>
     </div>
+
+  </div><!-- /services-3col -->
+
+  <!-- 私たちの強み -->
+  <div class="strengths-bar">
+    <div class="strength-label">私たちの強み</div>
+    <div class="strength-item"><span>👥</span><div><strong>専門資格を持つ</strong><p>スタッフによる対応</p></div></div>
+    <div class="strength-item"><span>📋</span><div><strong>法令・基準に基づく</strong><p>確実な測定・評価</p></div></div>
+    <div class="strength-item"><span>🤝</span><div><strong>測定から改善提案まで</strong><p>ワンストップ対応</p></div></div>
+    <div class="strength-item"><span>🏥</span><div><strong>多様な施設・装置に</strong><p>対応可能</p></div></div>
   </div>
 
-  <div class="facility-badges">
-    <div class="facility-badge"><span class="fi">🏥</span>医療機関（病院・クリニック）</div>
-    <div class="facility-badge"><span class="fi">🔬</span>研究施設</div>
-    <div class="facility-badge"><span class="fi">🎓</span>教育機関（大学・専門学校）</div>
-    <div class="facility-badge"><span class="fi">🏭</span>RI取扱事業所</div>
-  </div>
 </section>
 
 <!-- ABOUT -->
