@@ -272,7 +272,6 @@
   </a>
   <nav>
     <a href="index.html#services">事業内容</a>
-    <a href="index.html#equipment">測定機器</a>
     <a href="products.html" class="active">開発システム</a>
     <a href="ri_surface_check.html">🔬 測定ツール</a>
     <a href="index.html#about">会社概要</a>
@@ -489,7 +488,7 @@
 <div class="modal-overlay" id="modal-face" onclick="closeOnOverlay(event, 'face')">
   <div class="modal">
     <div class="modal-header banner-face">
-      <img src="in_out.jpg" alt="" class="modal-header-img" style="object-position:center;">
+      <img src="images/in_out.jpg" alt="" class="modal-header-img" style="object-position:center;">
       <!--<span class="banner-icon">🔐</span>-->
       <button class="modal-close" onclick="closeModal('face')">✕</button>
     </div>
@@ -536,7 +535,7 @@
 <div class="modal-overlay" id="modal-cart" onclick="closeOnOverlay(event, 'cart')">
   <div class="modal">
     <div class="modal-header banner-cart">
-      <img src="medical_cart.jpg" alt="" class="modal-header-img" style="object-position:center top;">
+      <img src="images/medical_cart.jpg" alt="" class="modal-header-img" style="object-position:center top;">
       <!-- <span class="banner-icon">💊</span>-->
       <button class="modal-close" onclick="closeModal('cart')">✕</button>
     </div>
@@ -582,8 +581,8 @@
 <div class="modal-overlay" id="modal-waiting" onclick="closeOnOverlay(event, 'waiting')">
   <div class="modal">
     <div class="modal-header banner-waiting">
-      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center bottom;">
-      <span class="banner-icon">👁️</span>
+      <img src="images/waiting.jpg" alt="" class="modal-header-img" style="object-position:center top;">
+      
       <button class="modal-close" onclick="closeModal('waiting')">✕</button>
     </div>
     <div class="modal-body">
@@ -628,27 +627,28 @@
 <div class="modal-overlay" id="modal-support" onclick="closeOnOverlay(event, 'support')">
   <div class="modal">
     <div class="modal-header banner-support">
-      <img src="images/illust_consulting.jpg" alt="" class="modal-header-img" style="object-position:center;">
-      <span class="banner-icon">🏥</span>
+      <img src="images/gm.jpg" alt="" class="modal-header-img" style="object-position:top;">
+      
       <button class="modal-close" onclick="closeModal('support')">✕</button>
     </div>
     <div class="modal-body">
       <h2>病院業務サポートツール群</h2>
       <div class="modal-sub">Hospital Support Software Suite</div>
       <p>
-        放射線管理業務で培った知見をもとに、病院・クリニックの事務作業を効率化するツール群です。
-        VBAマクロによるExcel自動化から、FastAPIによるWebアプリまで、
-        現場の声を聞きながら継続的に開発・改善しています。
+        一例：RI 表面汚染判定アプリ。
+         このアプリを使うことで、GM計数管の計数値を入力するだけで、
+        その場で法定基準値との比較・除染判定を行うことができます。
+        公開しているので、どなたでも自由にお使いいただけます。
+        <a href="ri_surface_check.html">🔬 表面汚染判定ツール</a>
+
       </p>
       <div class="modal-section">
-        <h3>含まれるツール</h3>
+        <h3>その他</h3>
         <ul class="feature-list">
-          <li>放射線作業環境測定 報告書自動作成（LOGファイル→Excelへ自動転記）</li>
-          <li>空気中放射性物質測定結果報告書 自動生成</li>
-          <li>RIAブロック・P-NO閾値判定ロジック搭載</li>
-          <li>新旧テンプレート自動変換マクロ</li>
-          <li>Cs-137ガンマ線スペクトル解析ツール（HTML・A4印刷対応）</li>
-          <li>個人被ばく線量集計・帳簿出力ツール</li>
+          <li>アイソトープ室 入退室管理システム（CSV→解析、グラフ、およびPDF出力）</li>
+          <li>薬剤期限管理システム（使用頻度の少ない薬剤をバーコード及びスマホで期限とLOT番号を取得して在庫状況の一覧を表示）</li>
+          <li>NaIマルチチャンネルデータからスペクトルグラフの作成</li>
+          
         </ul>
       </div>
       <div class="modal-section">
@@ -658,8 +658,7 @@
           <span class="tech-badge">VBA</span>
           <span class="tech-badge">openpyxl</span>
           <span class="tech-badge">FastAPI</span>
-          <span class="tech-badge">ADODB.Stream</span>
-          <span class="tech-badge">Shift-JIS対応</span>
+          
         </div>
       </div>
       <div class="modal-contact">
@@ -674,7 +673,7 @@
 <div class="modal-overlay" id="modal-sdec" onclick="closeOnOverlay(event,'sdec')">
   <div class="modal">
     <div class="modal-header banner-sdec">
-      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center top;">
+      <!--<img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center top;"> -->
       <span class="banner-icon">📐</span>
       <button class="modal-close" onclick="closeModal('sdec')">✕</button>
     </div>
@@ -713,7 +712,7 @@
 <div class="modal-overlay" id="modal-scrax" onclick="closeOnOverlay(event,'scrax')">
   <div class="modal">
     <div class="modal-header banner-scrax">
-      <img src="images/illust_leakage.jpg" alt="" class="modal-header-img" style="object-position:center;">
+      <!-- <img src="images/illust_leakage.jpg" alt="" class="modal-header-img" style="object-position:center;">-->
       <span class="banner-icon">📡</span>
       <button class="modal-close" onclick="closeModal('scrax')">✕</button>
     </div>
@@ -751,7 +750,7 @@
 <div class="modal-overlay" id="modal-kanri" onclick="closeOnOverlay(event,'kanri')">
   <div class="modal">
     <div class="modal-header banner-kanri">
-      <img src="images/illust_consulting.jpg" alt="" class="modal-header-img" style="object-position:center;">
+      <!--<img src="images/illust_consulting.jpg" alt="" class="modal-header-img" style="object-position:center;">-->
       <span class="banner-icon">👤</span>
       <button class="modal-close" onclick="closeModal('kanri')">✕</button>
     </div>
@@ -789,7 +788,7 @@
 <div class="modal-overlay" id="modal-naibu" onclick="closeOnOverlay(event,'naibu')">
   <div class="modal">
     <div class="modal-header banner-naibu">
-      <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center bottom;">
+     <!-- <img src="images/illust_measurement.jpg" alt="" class="modal-header-img" style="object-position:center bottom;">-->
       <span class="banner-icon">🧪</span>
       <button class="modal-close" onclick="closeModal('naibu')">✕</button>
     </div>
