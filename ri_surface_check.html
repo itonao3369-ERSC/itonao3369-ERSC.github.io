@@ -366,6 +366,27 @@
     margin-top: 4px;
     opacity: 0.85;
   }
+  .verdict-warn {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: rgba(255,165,2,0.13);
+    border: 1px solid rgba(255,165,2,0.5);
+    border-radius: 8px;
+    text-align: left;
+  }
+  .verdict-warn-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--warn);
+    margin-bottom: 6px;
+  }
+  .verdict-warn-item {
+    font-size: 0.78rem;
+    color: var(--warn);
+    font-weight: 500;
+    line-height: 1.8;
+    padding-left: 4px;
+  }
   .limit-bar-wrap { padding: 0 16px 16px; }
   .limit-bar-label {
     font-size: 0.68rem;
@@ -509,7 +530,7 @@
 <header>
   <div class="header-icon">☢️</div>
   <div class="header-text">
-    <h1>GMサーベイ 表面汚染 判定</h1>
+    <h1>RI 表面汚染 判定</h1>
     <p>Surface Contamination Assessment · 4 Bq/cm² 基準</p>
   </div>
 </header>
@@ -973,9 +994,24 @@
       panel.classList.add('is-danger');
     } else {
       const ratio = ((bqCm2 / currentLimit) * 100).toFixed(1);
-      document.getElementById('res-header').textContent = '✓  クリア';
-      document.getElementById('res-verdict').innerHTML =
-        '除染不要 — 搬出可<div class="verdict-sub">上限の ' + ratio + '% (< ' + currentLimit + ' Bq/cm²)</div>';
+      if (currentLimit === 4) {
+        // 搬出基準モード
+        document.getElementById('res-header').textContent = '✓  クリア — 搬出可';
+        document.getElementById('res-verdict').innerHTML =
+          '除染不要 — 管理区域外への搬出可'
+          + '<div class="verdict-sub">上限の ' + ratio + '% (< 4 Bq/cm²)</div>';
+      } else {
+        // 使用室内モード（40 Bq/cm²）
+        document.getElementById('res-header').textContent = '✓  室内基準内';
+        document.getElementById('res-verdict').innerHTML =
+          '除染不要（使用室内基準内）'
+          + '<div class="verdict-sub">上限の ' + ratio + '% (< 40 Bq/cm²)　※ 管理区域外への搬出基準（4 Bq/cm²）とは異なります</div>'
+          + '<div class="verdict-warn">'
+          + '<div class="verdict-warn-title">⚠ 汚染管理措置を実施してください（電離則第28条）</div>'
+          + '<div class="verdict-warn-item">① 汚染が拡がらない措置を講じること</div>'
+          + '<div class="verdict-warn-item">② 汚染のおそれがある区域を標識によって明示すること</div>'
+          + '</div>';
+      }
       panel.classList.add('is-safe');
     }
   }
