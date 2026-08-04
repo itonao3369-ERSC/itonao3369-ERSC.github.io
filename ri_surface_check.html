@@ -81,7 +81,7 @@
   /* ── 核種ボタングリッド ── */
   .nuclide-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
     padding: 14px 16px;
   }
@@ -107,6 +107,37 @@
   .nuclide-btn.active .nuclide-name { color: #ffffff; }
   .nuclide-btn.active .nuclide-eff  { color: #7dd4f8; opacity: 1; }
 
+
+  /* ── 機器注意書き ── */
+  .eff-device-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 16px 12px;
+    padding: 10px 14px;
+    background: rgba(0,191,255,0.08);
+    border: 1px solid rgba(0,191,255,0.3);
+    border-radius: 10px;
+  }
+  .eff-device-note-icon {
+    font-size: 1rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .eff-device-note-main {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.4;
+  }
+  .eff-device-note-sub {
+    font-size: 0.70rem;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
 
   /* ── 効率編集行 ── */
   .eff-edit-row {
@@ -538,6 +569,13 @@
 <!-- 核種選択 -->
 <div class="section">
   <div class="section-title">① 核種・検出効率</div>
+  <div class="eff-device-note">
+    <span class="eff-device-note-icon">ℹ</span>
+    <div>
+      <div class="eff-device-note-main">機器例（TGS-146 / TGS-1146）使用時の推定効率値</div>
+      <div class="eff-device-note-sub">お手元の測定器の校正証明書記載の検出効率値に合わせて修正してください</div>
+    </div>
+  </div>
   <div class="nuclide-grid" id="nuclide-grid">
     <button class="nuclide-btn active" data-eff="0.20" data-label="Tc-99m" onclick="selectNuclide(this)">
       <div class="nuclide-name">Tc-99m</div>
@@ -551,9 +589,13 @@
       <div class="nuclide-name">Tl-201</div>
       <div class="nuclide-eff" id="eff-label-2">効率 1.5%（目安）</div>
     </button>
+    <button class="nuclide-btn" data-eff="custom" data-label="Lu-177" onclick="selectNuclide(this)">
+      <div class="nuclide-name">Lu-177</div>
+      <div class="nuclide-eff" id="eff-label-3">全効率 5.00%</div>
+    </button>
     <button class="nuclide-btn" data-eff="custom" data-label="その他" onclick="selectNuclide(this)">
       <div class="nuclide-name">その他</div>
-      <div class="nuclide-eff" id="eff-label-3">手動入力</div>
+      <div class="nuclide-eff" id="eff-label-4">手動入力</div>
     </button>
   </div>
 
@@ -762,11 +804,17 @@
       <div class="legal-section-title">⚙️ 核種別 検出効率の目安</div>
       <div class="law-card">
         <div class="law-card-body">
-          <span class="highlight">Tc-99m</span>（140 keV γ線）　… 約 20%<br>
-          <span class="highlight">I-131</span>（364 keV γ線 + β線）… 約 35%<br>
-          <span class="highlight">Tl-201</span>（低エネルギーX線）　… 約 1.5%（目安）<br><br>
-          ※ 効率は機器・ジオメトリにより異なります。
-          校正済みの値を使用してください。
+          <div style="margin-bottom:8px;">
+          <span class="highlight">Tc-99m</span>　γ線140keV主体（β線なし）… εd 約 <span class="highlight">10%</span><br>
+          <span class="highlight">I-131</span>　　γ線364keV ＋ β線最大606keV … εd 約 <span class="highlight">35%</span><br>
+          <span class="highlight">Tl-201</span>　低エネルギーX線69〜80keV … εd 約 <span class="highlight">1.5%</span><br>
+          <span class="highlight">Lu-177</span>　γ線113/208keV ＋ β線最大498keV … εd 約 <span class="highlight">25%</span>
+          </div>
+          <div style="font-size:0.68rem;color:var(--warn);line-height:1.6;">
+          ※ 上記は TGS-146 / TGS-1146（GM-5004 有機薄窓 Φ50mm）使用時の推定値です。<br>
+          ※ 効率は機器・窓厚・測定ジオメトリにより大きく異なります。<br>
+          ※ 必ず校正証明書記載の換算定数（効率値）を優先して使用してください。
+          </div>
         </div>
       </div>
     </div>
@@ -796,9 +844,10 @@
   // デフォルト値: εd=機器効率, εs=線源効率(幾何学的効率)
   // 全効率 = εd × εs
   const DEFAULT_EFFS = [
-    {d: 0.10,  s: 0.50},  // Tc-99m  → 5.00%
-    {d: 0.35,  s: 0.50},  // I-131   → 17.50%
-    {d: 0.015, s: 0.50},  // Tl-201  → 0.75%
+    {d: 0.10,  s: 0.50},  // Tc-99m  → 5.00%（γ線140keV主体）
+    {d: 0.35,  s: 0.50},  // I-131   → 17.50%（β+γ）
+    {d: 0.015, s: 0.50},  // Tl-201  → 0.75%（低エネX線）
+    {d: 0.25,  s: 0.50},  // Lu-177  → 12.50%（β+γ・有機薄窓GM管）
     {d: 0.20,  s: 0.50}   // その他  → 10.00%
   ];
 
@@ -814,7 +863,7 @@
       const s = localStorage.getItem(STORAGE_KEY);
       if (!s) return null;
       const arr = JSON.parse(s);
-      return (Array.isArray(arr) && arr.length === 4) ? arr : null;
+      return (Array.isArray(arr) && arr.length === 5) ? arr : null;
     }, null);
     if (fromLS) return fromLS;
 
@@ -886,7 +935,7 @@
   (function restoreLabels() {
     nuclideEffs.forEach((v, i) => {
       const lbl = document.getElementById('eff-label-' + i);
-      if (lbl && i < 3) lbl.textContent = '全効率 ' + (v.d * v.s * 100).toFixed(2) + '%';
+      if (lbl && i < 4) lbl.textContent = '全効率 ' + (v.d * v.s * 100).toFixed(2) + '%';
     });
     updateEffPanel(0);
     currentEff = nuclideEffs[0].d * nuclideEffs[0].s;
@@ -926,7 +975,7 @@
     document.getElementById('eff-total-val').textContent = (total * 100).toFixed(2) + '%';
     currentEff = total;
     const lbl = document.getElementById('eff-label-' + activeIndex);
-    if (lbl && activeIndex < 3) lbl.textContent = '全効率 ' + (total * 100).toFixed(2) + '%';
+    if (lbl && activeIndex < 4) lbl.textContent = '全効率 ' + (total * 100).toFixed(2) + '%';
     saveEffs();
   }
 
@@ -944,7 +993,7 @@
     saveEffs();
     nuclideEffs.forEach((v, i) => {
       const lbl = document.getElementById('eff-label-' + i);
-      if (lbl && i < 3) lbl.textContent = '全効率 ' + (v.d * v.s * 100).toFixed(2) + '%';
+      if (lbl && i < 4) lbl.textContent = '全効率 ' + (v.d * v.s * 100).toFixed(2) + '%';
     });
     updateEffPanel(activeIndex);
     currentEff = nuclideEffs[activeIndex].d * nuclideEffs[activeIndex].s;
