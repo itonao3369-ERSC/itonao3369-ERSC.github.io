@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT室 漏えい線量計算 - Japanese-DLP法</title>
+<style>
+  :root{
+    --ink:#152233;
+    --ink-soft:#4b5b70;
+    --paper:#f3f5f7;
+    --card:#ffffff;
+    --line:#dde3ea;
+    --accent:#0f6e63;
+    --accent-soft:#e4f2ef;
+    --warn:#b4472a;
+    --warn-soft:#fbe9e4;
+    --ok:#1f7a4d;
+    --ok-soft:#e6f4ec;
+    --mono: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+    --sans: "IBM Plex Sans","Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:14px; line-height:1.55;
+    padding-bottom:64px;
+  }
+  header.top{
+    background:linear-gradient(135deg,#152233 0%,#1c3a4f 60%,#0f6e63 130%);
+    color:#eef3f2; padding:28px 28px 22px;
+  }
+  header.top .kicker{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#9fd8cc; margin-bottom:6px;
+  }
+  header.top h1{ margin:0 0 6px; font-size:22px; font-weight:700; letter-spacing:.01em;}
+  header.top p{ margin:0; color:#c7d4d1; font-size:12.5px; max-width:760px;}
+  main{ max-width:1180px; margin:0 auto; padding:22px 20px 0;}
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:880px){ .grid2{grid-template-columns:1fr;} }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:18px 20px; margin-bottom:16px;
+  }
+  .card h2{
+    font-size:13px; margin:0 0 14px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--accent); font-weight:700; display:flex; align-items:center; gap:8px;
+  }
+  .card h2 .num{
+    width:20px;height:20px;border-radius:5px;background:var(--accent);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);
+  }
+  label.field{ display:block; margin-bottom:12px; }
+  label.field .lbl{ display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
+  label.field .hint{ display:block; font-size:11px; color:#8b96a3; margin-top:3px; }
+  input[type=number], input[type=text], select{
+    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px;
+    font-family:var(--mono); font-size:13.5px; background:#fafcfd; color:var(--ink);
+  }
+  input[type=number]:focus, input[type=text]:focus, select:focus{
+    outline:2px solid var(--accent); outline-offset:1px; background:#fff;
+  }
+  .row-inline{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .row-inline3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .sub-block{
+    border:1px solid var(--line); border-radius:8px; padding:14px; background:#fbfcfd; margin-bottom:12px;
+  }
+  .sub-block .sb-title{ font-weight:700; font-size:12.5px; margin-bottom:10px; color:var(--ink); }
+  .dlp-summary{
+    font-family:var(--mono); font-size:12.5px; color:var(--accent); background:var(--accent-soft);
+    border-radius:6px; padding:8px 10px; margin-top:6px;
+  }
+  details.advanced{ margin-top:4px; }
+  details.advanced summary{
+    cursor:pointer; font-size:12px; color:var(--ink-soft); user-select:none; padding:4px 0;
+  }
+  details.advanced .adv-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;
+    padding-top:10px; border-top:1px dashed var(--line);
+  }
+  table.evalpoints{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.evalpoints th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); border-bottom:2px solid var(--line); padding:6px 6px; white-space:nowrap;
+  }
+  table.evalpoints td{ padding:5px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.evalpoints th.col-del, table.evalpoints td.col-del{
+    position: sticky; right: 0; background: var(--card);
+    box-shadow: -6px 0 6px -6px rgba(0,0,0,0.15);
+    text-align:center; z-index:2;
+  }
+  table.evalpoints tr:hover td.col-del{ background:#f8fafb; }
+  table.evalpoints input, table.evalpoints select{ font-size:12px; padding:5px 6px; }
+  table.evalpoints tr:hover td{ background:#f8fafb; }
+  .col-name{ min-width:110px;}
+  .col-narrow{ width:88px; }
+  .col-narrow2{ width:74px; }
+  .badge{
+    display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700;
+    font-family:var(--mono);
+  }
+  .badge.ok{ background:var(--ok-soft); color:var(--ok); }
+  .badge.ng{ background:var(--warn-soft); color:var(--warn); }
+  .bar-wrap{ width:84px; height:7px; border-radius:4px; background:#e7ebee; overflow:hidden; }
+  .bar{ height:100%; background:var(--ok); }
+  .bar.ng{ background:var(--warn); }
+  .es-val{ font-family:var(--mono); font-weight:700; }
+  .toolbar{ display:flex; gap:10px; margin:14px 0 6px; flex-wrap:wrap; align-items:center; }
+  button{
+    font-family:var(--sans); font-size:12.5px; font-weight:600; border-radius:7px; border:1px solid var(--line);
+    background:#fff; color:var(--ink); padding:8px 14px; cursor:pointer; transition:.15s;
+  }
+  button:hover{ border-color:var(--accent); color:var(--accent); }
+  button.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  button.primary:hover{ background:#0b564d; color:#fff; }
+  button.ghost{ background:transparent; }
+  .del-btn{
+    background:transparent; border:none; color:#b3bcc6; font-size:15px; cursor:pointer; padding:2px 6px;
+  }
+  .del-btn:hover{ color:var(--warn); }
+  .legend{ font-size:11.5px; color:var(--ink-soft); margin-top:10px; line-height:1.7;}
+  .legend code{ font-family:var(--mono); background:#eef1f4; padding:1px 5px; border-radius:4px; }
+  footer.foot{
+    max-width:1180px; margin:24px auto 0; padding:16px 20px 30px; font-size:11px; color:#8b96a3;
+    border-top:1px solid var(--line);
+  }
+  .formula-box{
+    font-family:var(--mono); font-size:12px; background:#101c28; color:#c9e8e0; border-radius:8px;
+    padding:14px 16px; line-height:1.9; overflow-x:auto;
+  }
+  .formula-box .fc{ color:#7bc3b4; }
+  .empty-note{ font-size:12px; color:#8b96a3; padding:10px 0;}
+  .summary-strip{
+    display:flex; gap:14px; flex-wrap:wrap; margin-top:12px;
+  }
+  .stat{
+    flex:1; min-width:140px; border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:#fbfcfd;
+  }
+  .stat .k{ font-size:10.5px; text-transform:uppercase; color:var(--ink-soft); letter-spacing:.05em;}
+  .stat .v{ font-family:var(--mono); font-size:17px; font-weight:700; margin-top:2px;}
+  .stat .v.warn{ color:var(--warn); }
+  .stat .v.ok{ color:var(--ok); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="kicker">RADIATION SHIELDING &middot; X線CT室</div>
+  <h1>CT室 漏えい線量計算ツール（Japanese-DLP法）</h1>
+  <p>公益社団法人日本放射線技術学会「X線CT室の漏えい線量計算マニュアル 第1版」(2019) に基づく DLP法（Watanabe法）による散乱線漏えい線量の計算。鉛・コンクリート透過率は医政発0331第16号 別紙３ 表２（鉛）・表３（コンクリート）の値を使用。</p>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2><span class="num">1</span>施設情報（報告書に印字されます）</h2>
+    <div class="row-inline3">
+      <label class="field">
+        <span class="lbl">施設名</span>
+        <input type="text" id="facilityName" placeholder="例：〇〇病院">
+      </label>
+      <label class="field">
+        <span class="lbl">エックス線診療室名</span>
+        <input type="text" id="roomName" placeholder="例：救急CT室">
+      </label>
+      <label class="field">
+        <span class="lbl">装置名</span>
+        <input type="text" id="deviceName" placeholder="例：SOMATOM X.cite">
+      </label>
+    </div>
+    <div class="row-inline">
+      <label class="field">
+        <span class="lbl">作成者・部署（任意）</span>
+        <input type="text" id="authorInfo" placeholder="例：〇〇株式会社 放射線管理部">
+      </label>
+      <label class="field">
+        <span class="lbl">実効線量限度（μSv/3ヶ月）</span>
+        <input type="number" id="reportLimit" value="1300" step="1">
+        <span class="hint">報告書の判定基準として使用します（既定値：管理区域境界/病室 1.3mSv/3ヶ月）。</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2><span class="num">2</span>撮影条件・機器設定</h2>
+      <div class="row-inline">
+        <label class="field">
+          <span class="lbl">管電圧 kVp</span>
+          <select id="kvp"></select>
+        </label>
+        <label class="field">
+          <span class="lbl">稼働日数（日/週）</span>
+          <input type="number" id="workdays" value="5" min="1" max="7" step="1">
+        </label>
+      </div>
+      <label class="field">
+        <span class="lbl">評価期間（週 / 3ヶ月）</span>
+        <input type="number" id="weeksPer3mo" value="13" min="1" step="1">
+        <span class="hint">通常13週固定。変更する場合のみ編集してください。</span>
+      </label>
+      <details class="advanced">
+        <summary>詳細設定（散乱係数など・上級者向け）</summary>
+        <div class="adv-grid">
+          <label class="field">
+            <span class="lbl">k_head（cm⁻¹）</span>
+            <input type="number" id="khead" value="0.00018" step="0.00001">
+          </label>
+          <label class="field">
+            <span class="lbl">k_body（cm⁻¹）</span>
+            <input type="number" id="kbody" value="0.0006" step="0.00001">
+          </label>
+          <label class="field">
+            <span class="lbl">体幹部補正係数</span>
+            <input type="number" id="bodyfactor" value="1.2" step="0.01">
+          </label>
+          <label class="field">
+            <span class="lbl">コンクリート密度（g/cm³）</span>
+            <input type="number" id="rcdensity" value="2.10" step="0.01">
+            <span class="hint">表3の透過率は密度2.35 g/cm³基準。国内の画壁等は概ね2.10 g/cm³のため、等価厚さ（density/2.35×厚さ）に自動換算します。</span>
+          </label>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2><span class="num">3</span>DLP設定（診断参考レベル DRLs 2025 初期値）</h2>
+      <div class="sub-block">
+        <div class="sb-title">頭部単純ルーチン</div>
+        <div class="row-inline3">
+          <label class="field">
+            <span class="lbl">DLP（mGy・cm/検査）</span>
+            <input type="number" id="dlpHead" value="1260" step="1">
+          </label>
+          <label class="field">
+            <span class="lbl">検査件数（件/日）</span>
+            <input type="number" id="countHead" value="15" step="1" min="0">
+          </label>
+          <div></div>
+        </div>
+      </div>
+      <div class="sub-block">
+        <div class="sb-title">胸部〜骨盤 1相</div>
+        <div class="row-inline3">
+          <label class="field">
+            <span class="lbl">DLP（mGy・cm/検査）</span>
+            <input type="number" id="dlpBody" value="940" step="1">
+          </label>
+          <label class="field">
+            <span class="lbl">検査件数（件/日）</span>
+            <input type="number" id="countBody" value="30" step="1" min="0">
+          </label>
+          <div></div>
+        </div>
+      </div>
+      <div class="dlp-summary" id="dlpSummary"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">4</span>評価点と遮へい条件</h2>
+    <div style="overflow-x:auto;">
+      <datalist id="faceSuggestions">
+        <option value="A"><option value="B"><option value="C"><option value="D">
+        <option value="E"><option value="F"><option value="病室"><option value="居住区域">
+        <option value="敷地境界">
+      </datalist>
+      <table class="evalpoints" id="pointsTable">
+        <thead>
+          <tr>
+            <th class="col-narrow2">評価面</th>
+            <th class="col-narrow2">点番号</th>
+            <th class="col-narrow2">方向</th>
+            <th class="col-narrow2">f値</th>
+            <th class="col-narrow2">距離 d（m）</th>
+            <th class="col-narrow2">Pb厚（mmPb）</th>
+            <th class="col-narrow2">RC厚（cm）</th>
+            <th class="col-narrow2">U</th>
+            <th class="col-narrow2">T</th>
+            <th class="col-name">限度区分</th>
+            <th class="col-narrow2">限度（µSv/3月）</th>
+            <th class="col-narrow2">Dt(合成)</th>
+            <th class="col-name">ES（µSv/3ヶ月）</th>
+            <th class="col-narrow2">対限度比</th>
+            <th class="col-narrow2">判定</th>
+            <th class="col-del">操作</th>
+          </tr>
+        </thead>
+        <tbody id="pointsBody"></tbody>
+      </table>
+    </div>
+    <div class="toolbar">
+      <button class="primary" id="addRow">＋ 評価点を追加</button>
+      <button id="clearRows" style="color:var(--warn);border-color:#e6c6bc;">🗑 すべての評価点を削除</button>
+      <button id="importExcel">📥 距離をExcelから読み込み</button>
+      <input type="file" id="excelFile" accept=".xlsx,.xls" style="display:none;">
+      <button id="exportCsv">結果をCSV書き出し</button>
+      <button id="exportWord">📄 計算書を出力（Word）</button>
+      <button class="ghost" id="loadExample">計算例（マニュアル3.1）を読込</button>
+    </div>
+    <div id="importStatus" class="legend" style="display:none;"></div>
+    <div class="legend" style="margin-top:6px;">
+      <b>Word出力について：</b>このボタンで生成される .doc ファイルは、Word以外のソフトを使わず単一HTMLで完結させるため、実体はHTML文書です。開くと自動的に印刷レイアウトで表示されますが、そのまま「上書き保存」を繰り返すとWord内部でHTML形式のまま保存され、次に開いたときにWebレイアウトへ戻ることがあります。ダウンロード後、一度だけ「名前を付けて保存」→ファイルの種類を「Word文書（*.docx）」に変更して保存し直すと、以降は通常のWordファイルとして印刷レイアウトが保持されます。
+    </div>
+    <div class="summary-strip" id="summaryStrip"></div>
+    <div class="legend">
+      限度区分の目安&nbsp;&mdash;&nbsp;
+      <code>管理区域境界 / 病室：1.3 mSv/3ヶ月</code>　
+      <code>敷地内居住区域 / 敷地境界：250 µSv/3ヶ月</code>　
+      <code>診療室隔壁外側：1 mSv/週（別途週換算が必要、本表では対象外）</code>。<br>
+      「方向」を<b>ガントリ方向</b>にすると吸収体補正係数 f = 0.1、<b>カウチ方向</b>にすると f = 0.4（下記参照）、それ以外は f = 1.0 が自動適用されます。<br>
+      <b>カウチ方向のfについて：</b>2019年マニュアルでは、人体による減弱を根拠にf=0.4とできる可能性がWatanabeら(2017)の実測から示されていますが、適用範囲（体格による変動）が未定義のためマニュアル本文では不採用とされています。2022年の追試研究（渡邉ほか, 保健物理57(2):87-92）は頭部・体幹部の散乱係数(AKSF)の見直しを扱っていますが、カウチ方向fを確定した後続文献は現時点で確認できていません。f=0.4を選択した場合は<b>参考値</b>として扱い、最終的な遮へい設計では安全側（f=1.0）との比較検討を推奨します。<br>
+      <b>Excel読み込みについて：</b>「線源名」「測定点」「距離_mm」の列を含むシート（DXF距離計算ツールの出力形式）を読み込み、測定点ラベルを評価点名として距離dを自動入力します。既存の評価点名と一致する場合は距離のみ更新し、一致しない場合は新規行として追加します（鉛厚・RC厚・方向などは初期値のため別途入力してください）。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">5</span>保存・履歴（このブラウザのみに保存）</h2>
+    <div class="row-inline">
+      <label class="field">
+        <span class="lbl">保存名（任意）</span>
+        <input type="text" id="saveLabel" placeholder="例：多治見病院 CT室A案">
+      </label>
+      <div style="display:flex; align-items:flex-end;">
+        <button class="primary" id="saveSnapshot" style="width:100%;">現在の内容を保存（日時自動記録）</button>
+      </div>
+    </div>
+    <div id="savesList"></div>
+    <div class="legend">
+      保存データはこの端末のブラウザ内（localStorage）にのみ保持され、外部やサーバーには一切送信されません。他のPC・他のブラウザ・シークレットモードとは共有されません。複数人で同じPCを使う場合は保存名で区別してください。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">6</span>計算式</h2>
+    <div class="formula-box">
+<span class="fc">Ksec(head)</span> = k_head × f × DLP3mo(head) × (1/d)²　[mGy/3ヶ月]<br>
+<span class="fc">Ksec(body)</span> = 1.2 × k_body × f × DLP3mo(body) × (1/d)²　[mGy/3ヶ月]<br>
+<span class="fc">ES</span> = { Ksec(head) + Ksec(body) } × Dt × (E/Ka) × U × T × 1000　[µSv/3ヶ月]<br>
+<span class="fc">Dt</span> = Dt_Pb(鉛厚) × Dt_RC(コンクリート等価厚) 　（医政発0331第16号 表２・表３より対数線形補間）<br>
+<span class="fc">等価厚さ</span> = 実厚さ（cm）× コンクリート密度 / 2.35　（表３はコンクリート密度2.35 g/cm³基準）<br>
+<span class="fc">DLP3mo</span> = DLP/検査 × 件数/日 × 稼働日数/週 × 評価週数
+    </div>
+  </div>
+
+</main>
+
+<footer class="foot">
+  出典：公益社団法人日本放射線技術学会 関係法令委員会「Ｘ線CT室の漏えい線量計算マニュアル 第1版」(2019)／Watanabe H, et al. Radiol Phys Technol. 2017;10(2):213-226／渡邉ほか. 保健物理. 2022;57(2):87-92／診断参考レベル DRLs 2025／医政発0331第16号（平成26年3月31日）別紙３ 表２・表３（NCRP Report No.147準拠）。
+  鉛・コンクリート透過率データは医政発0331第16号 表２（鉛）・表３（コンクリート、密度2.35 g/cm³基準）から抽出。本ツールは概算評価用であり、実際の遮へい設計は必ず一次資料および実測により最終確認してください。カウチ方向のf値（0.4）は2017年の実測提案値を参考値として実装したものであり、公的に確定した係数ではありません。
+</footer>
+
+<script>
+const TABLE = {"kvps": [25, 30, 35, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150], "eka": [0.269, 0.416, 0.602, 1.106, 1.207, 1.308, 1.3575, 1.407, 1.42, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433, 1.433], "pb_th_mm": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.5, 4.0], "pb_matrix": [[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [7.08e-05, 0.000291, 0.00096, 0.0675, 0.086, 0.107, 0.131, 0.155, 0.179, 0.203, 0.227, 0.251, 0.276, 0.301, 0.327, 0.353, 0.379, 0.404, 0.428, 0.45, 0.47, 0.49, 0.509, 0.526], [3.01e-07, 3.55e-06, 2.86e-05, 0.011, 0.0172, 0.026, 0.0376, 0.0513, 0.0665, 0.0824, 0.0985, 0.115, 0.131, 0.147, 0.163, 0.178, 0.194, 0.209, 0.225, 0.24, 0.255, 0.27, 0.285, 0.3], [1.92e-09, 6.48e-08, 1.28e-06, 0.00254, 0.00475, 0.00847, 0.0141, 0.0218, 0.0311, 0.0415, 0.0525, 0.0637, 0.0748, 0.0853, 0.0955, 0.105, 0.114, 0.123, 0.132, 0.142, 0.151, 0.161, 0.171, 0.181], [1.33e-11, 1.3e-09, 6.37e-08, 0.000716, 0.00156, 0.00321, 0.00608, 0.0104, 0.0162, 0.0231, 0.0309, 0.0389, 0.0469, 0.0544, 0.0612, 0.0672, 0.0728, 0.0783, 0.0838, 0.0896, 0.0956, 0.102, 0.108, 0.115], [9.33e-14, 2.66e-11, 3.27e-09, 0.000227, 0.000568, 0.00133, 0.00282, 0.00534, 0.009, 0.0137, 0.0192, 0.0252, 0.0311, 0.0366, 0.0414, 0.0454, 0.049, 0.0523, 0.0557, 0.0593, 0.063, 0.0671, 0.0712, 0.0754], [6.59e-16, 5.48e-13, 1.7e-10, 7.73e-05, 0.000221, 0.000582, 0.00138, 0.00285, 0.00519, 0.00841, 0.0124, 0.0169, 0.0214, 0.0255, 0.0291, 0.0319, 0.0342, 0.0363, 0.0383, 0.0406, 0.043, 0.0456, 0.0483, 0.051], [4.65e-18, 1.13e-14, 8.82e-12, 2.78e-05, 8.97e-05, 0.000265, 0.000692, 0.00157, 0.00307, 0.00529, 0.0082, 0.0116, 0.0151, 0.0183, 0.0209, 0.0229, 0.0245, 0.0258, 0.0271, 0.0286, 0.0301, 0.0318, 0.0335, 0.0353], [3.29e-20, 2.33e-16, 4.59e-13, 1.04e-05, 3.76e-05, 0.000124, 0.000355, 0.000876, 0.00184, 0.00339, 0.00551, 0.00808, 0.0108, 0.0133, 0.0154, 0.0168, 0.0179, 0.0187, 0.0196, 0.0205, 0.0215, 0.0227, 0.0238, 0.025], [2.33e-22, 4.82e-18, 2.39e-14, 3.97e-06, 1.61e-05, 5.87e-05, 0.000185, 0.000496, 0.00112, 0.00219, 0.00375, 0.00571, 0.00786, 0.00985, 0.0114, 0.0125, 0.0133, 0.0138, 0.0144, 0.015, 0.0157, 0.0164, 0.0172, 0.018], [1.64e-24, 9.95e-20, 1.24e-15, 1.55e-06, 7.02e-06, 2.83e-05, 9.77e-05, 0.000283, 0.000689, 0.00143, 0.00257, 0.00408, 0.00577, 0.00736, 0.0086, 0.00944, 0.00997, 0.0103, 0.0107, 0.0111, 0.0116, 0.0121, 0.0126, 0.0131], [1.16e-26, 2.05e-21, 6.48e-17, 6.14e-07, 3.09e-06, 1.37e-05, 5.19e-05, 0.000163, 0.000425, 0.000939, 0.00178, 0.00293, 0.00427, 0.00554, 0.00653, 0.00718, 0.00756, 0.00781, 0.00803, 0.0083, 0.00863, 0.00899, 0.00935, 0.00972], [8.22e-29, 4.24e-23, 3.38e-18, 2.46e-07, 1.38e-06, 6.73e-06, 2.77e-05, 9.41e-05, 0.000264, 0.000619, 0.00123, 0.00212, 0.00317, 0.0042, 0.005, 0.0055, 0.00578, 0.00595, 0.00609, 0.00627, 0.0065, 0.00676, 0.00701, 0.00727], [5.81e-31, 8.76e-25, 1.76e-19, 9.93e-08, 6.15e-07, 3.31e-06, 1.48e-05, 5.45e-05, 0.000164, 0.000409, 0.000859, 0.00154, 0.00237, 0.0032, 0.00384, 0.00424, 0.00445, 0.00456, 0.00465, 0.00478, 0.00494, 0.00513, 0.00531, 0.00549], [4.11e-33, 1.81e-26, 9.16e-21, 4.04e-08, 2.77e-07, 1.63e-06, 7.98e-06, 3.17e-05, 0.000102, 0.000271, 0.0006, 0.00112, 0.00178, 0.00245, 0.00297, 0.00328, 0.00344, 0.00352, 0.00358, 0.00366, 0.00379, 0.00392, 0.00405, 0.00419], [2.9e-35, 3.74e-28, 4.77e-22, 1.65e-08, 1.25e-07, 8.08e-07, 4.3e-06, 1.84e-05, 6.38e-05, 0.00018, 0.00042, 0.000815, 0.00134, 0.00188, 0.0023, 0.00255, 0.00268, 0.00273, 0.00276, 0.00283, 0.00292, 0.00302, 0.00312, 0.00321], [2.05e-37, 7.72e-30, 2.48e-23, 6.75e-09, 5.66e-08, 4.01e-07, 2.32e-06, 1.07e-05, 3.99e-05, 0.00012, 0.000294, 0.000596, 0.00101, 0.00145, 0.00179, 0.00199, 0.00209, 0.00212, 0.00215, 0.00219, 0.00226, 0.00234, 0.00241, 0.00249], [1.45e-39, 1.59e-31, 1.29e-24, 2.78e-09, 2.57e-08, 1.99e-07, 1.25e-06, 6.27e-06, 2.5e-05, 7.98e-05, 0.000206, 0.000436, 0.000762, 0.00111, 0.00139, 0.00156, 0.00163, 0.00166, 0.00167, 0.00171, 0.00176, 0.00182, 0.00188, 0.00193], [1.03e-41, 3.29e-33, 6.74e-26, 1.14e-09, 1.17e-08, 9.91e-08, 6.77e-07, 3.66e-06, 1.56e-05, 5.32e-05, 0.000145, 0.000319, 0.000577, 0.000861, 0.00109, 0.00122, 0.00128, 0.0013, 0.00131, 0.00133, 0.00138, 0.00142, 0.00147, 0.00151], [7.25e-44, 6.8e-35, 3.51e-27, 4.72e-10, 5.3e-09, 4.93e-08, 3.66e-07, 2.13e-06, 9.79e-06, 3.55e-05, 0.000102, 0.000234, 0.000437, 0.000666, 0.000853, 0.000962, 0.00101, 0.00102, 0.00103, 0.00105, 0.00108, 0.00112, 0.00116, 0.00119], [5.13e-46, 1.4e-36, 1.83e-28, 1.95e-10, 2.41e-09, 2.46e-08, 1.98e-07, 1.25e-06, 6.13e-06, 2.36e-05, 7.16e-05, 0.000172, 0.000331, 0.000516, 0.000668, 0.000758, 0.000795, 0.000803, 0.000807, 0.000823, 0.00085, 0.000882, 0.000913, 0.000942], [3.62e-48, 2.9e-38, 9.52e-30, 8.05e-11, 1.1e-09, 1.22e-08, 1.07e-07, 7.28e-07, 3.84e-06, 1.58e-05, 5.04e-05, 0.000126, 0.000251, 0.0004, 0.000524, 0.000597, 0.000627, 0.000633, 0.000636, 0.000649, 0.000671, 0.000698, 0.000724, 0.000747], [2.56e-50, 5.99e-40, 4.96e-31, 3.33e-11, 5.01e-10, 6.1e-09, 5.8e-08, 4.25e-07, 2.41e-06, 1.05e-05, 3.55e-05, 9.28e-05, 0.000191, 0.00031, 0.000412, 0.000472, 0.000496, 0.0005, 0.000503, 0.000513, 0.000531, 0.000554, 0.000575, 0.000595], [1.81e-52, 1.24e-41, 2.58e-32, 1.38e-11, 2.29e-10, 3.04e-09, 3.14e-08, 2.49e-07, 1.51e-06, 7.02e-06, 2.5e-05, 6.82e-05, 0.000145, 0.000241, 0.000324, 0.000373, 0.000392, 0.000396, 0.000398, 0.000406, 0.000422, 0.00044, 0.000459, 0.000476], [1.28e-54, 2.55e-43, 1.34e-33, 5.71e-12, 1.04e-10, 1.52e-09, 1.7e-08, 1.45e-07, 9.47e-07, 4.69e-06, 1.76e-05, 5.01e-05, 0.00011, 0.000187, 0.000255, 0.000295, 0.000311, 0.000314, 0.000315, 0.000322, 0.000335, 0.000351, 0.000367, 0.000382], [9.05e-57, 5.27e-45, 7e-35, 2.37e-12, 4.76e-11, 7.57e-10, 9.21e-09, 8.49e-08, 5.94e-07, 3.13e-06, 1.24e-05, 3.68e-05, 8.36e-05, 0.000145, 0.0002, 0.000233, 0.000246, 0.000249, 0.00025, 0.000256, 0.000267, 0.000281, 0.000294, 0.000307], [6.4e-59, 1.09e-46, 3.65e-36, 9.8e-13, 2.17e-11, 3.78e-10, 4.99e-09, 4.96e-08, 3.72e-07, 2.09e-06, 8.71e-06, 2.71e-05, 6.35e-05, 0.000113, 0.000158, 0.000185, 0.000196, 0.000197, 0.000198, 0.000204, 0.000213, 0.000225, 0.000237, 0.000248], [4.52e-61, 2.25e-48, 1.9e-37, 4.06e-13, 9.91e-12, 1.88e-10, 2.7e-09, 2.9e-08, 2.33e-07, 1.39e-06, 6.14e-06, 1.99e-05, 4.83e-05, 8.79e-05, 0.000124, 0.000146, 0.000155, 0.000157, 0.000158, 0.000162, 0.00017, 0.00018, 0.000191, 0.000201], [3.2e-63, 4.64e-50, 9.89e-39, 1.68e-13, 4.53e-12, 9.4e-11, 1.46e-09, 1.7e-08, 1.46e-07, 9.3e-07, 4.32e-06, 1.47e-05, 3.67e-05, 6.84e-05, 9.79e-05, 0.000116, 0.000123, 0.000125, 0.000126, 0.000129, 0.000136, 0.000145, 0.000154, 0.000163], [2.26e-65, 9.59e-52, 5.15e-40, 6.98e-14, 2.07e-12, 4.69e-11, 7.93e-10, 9.91e-09, 9.18e-08, 6.21e-07, 3.04e-06, 1.08e-05, 2.79e-05, 5.32e-05, 7.72e-05, 9.21e-05, 9.8e-05, 9.92e-05, 0.0001, 0.000103, 0.000109, 0.000117, 0.000124, 0.000132], [1.6e-67, 1.98e-53, 2.68e-41, 2.89e-14, 9.43e-13, 2.34e-11, 4.3e-10, 5.79e-09, 5.76e-08, 4.15e-07, 2.14e-06, 7.93e-06, 2.13e-05, 4.14e-05, 6.09e-05, 7.3e-05, 7.8e-05, 7.89e-05, 7.97e-05, 8.26e-05, 8.76e-05, 9.4e-05, 0.000101, 0.000108], [2.82e-78, 7.43e-62, 1.03e-47, 3.55e-16, 1.87e-14, 7.24e-13, 2e-11, 3.95e-10, 5.58e-09, 5.5e-08, 3.72e-07, 1.71e-06, 5.42e-06, 1.18e-05, 1.86e-05, 2.3e-05, 2.49e-05, 2.54e-05, 2.58e-05, 2.72e-05, 2.94e-05, 3.25e-05, 3.59e-05, 3.95e-05], [4.98e-89, 2.79e-70, 3.94e-54, 4.35e-18, 3.72e-16, 2.24e-14, 9.35e-13, 2.7e-11, 5.42e-10, 7.3e-09, 6.44e-08, 3.69e-07, 1.38e-06, 3.39e-06, 5.69e-06, 7.29e-06, 7.99e-06, 8.19e-06, 8.42e-06, 9.03e-06, 1e-05, 1.15e-05, 1.31e-05, 1.5e-05]], "rc_th_mm": [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0, 160.0, 170.0, 180.0, 190.0, 200.0, 210.0, 220.0, 230.0, 240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0, 350.0, 400.0], "rc_matrix": [[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [0.000163, 0.000585, 0.00173, 0.108, 0.128, 0.146, 0.163, 0.179, 0.197, 0.22, 0.249, 0.283, 0.315, 0.342, 0.364, 0.382, 0.396, 0.408, 0.418, 0.426, 0.434, 0.441, 0.446, 0.45], [1.46e-06, 1.31e-05, 8.43e-05, 0.019, 0.0262, 0.0345, 0.0437, 0.0539, 0.0653, 0.0786, 0.0942, 0.112, 0.13, 0.147, 0.163, 0.178, 0.192, 0.204, 0.216, 0.228, 0.239, 0.249, 0.26, 0.271], [2.31e-08, 4.63e-07, 5.9e-06, 0.00434, 0.00691, 0.0104, 0.0149, 0.0205, 0.0271, 0.0346, 0.043, 0.0521, 0.0617, 0.0718, 0.0822, 0.0927, 0.103, 0.114, 0.125, 0.135, 0.145, 0.156, 0.166, 0.178], [4.31e-10, 1.84e-08, 4.53e-07, 0.00116, 0.00213, 0.00366, 0.00589, 0.00891, 0.0127, 0.0171, 0.0218, 0.0267, 0.0321, 0.038, 0.0446, 0.0519, 0.0596, 0.0678, 0.0762, 0.0847, 0.0933, 0.102, 0.112, 0.122], [8.46e-12, 7.56e-10, 3.57e-08, 0.000345, 0.000731, 0.00142, 0.00255, 0.00422, 0.00643, 0.00903, 0.0118, 0.0146, 0.0177, 0.0213, 0.0255, 0.0305, 0.036, 0.0421, 0.0485, 0.0551, 0.0619, 0.0691, 0.0769, 0.0857], [1.69e-13, 3.15e-11, 2.84e-09, 0.000111, 0.000269, 0.000591, 0.00118, 0.00212, 0.00342, 0.005, 0.00665, 0.00835, 0.0102, 0.0124, 0.0152, 0.0185, 0.0225, 0.0269, 0.0317, 0.0368, 0.042, 0.0476, 0.0538, 0.0608], [3.4e-15, 1.32e-12, 2.26e-10, 3.74e-05, 0.000105, 0.00026, 0.00057, 0.00111, 0.00189, 0.00286, 0.00388, 0.00492, 0.00606, 0.00745, 0.00927, 0.0116, 0.0143, 0.0176, 0.0211, 0.0249, 0.0289, 0.0332, 0.038, 0.0435], [6.84e-17, 5.51e-14, 1.81e-11, 1.31e-05, 4.25e-05, 0.000118, 0.000286, 0.000596, 0.00107, 0.00168, 0.00232, 0.00296, 0.00368, 0.00458, 0.00578, 0.00736, 0.00932, 0.0117, 0.0143, 0.0171, 0.0201, 0.0234, 0.027, 0.0312], [1.38e-18, 2.31e-15, 1.44e-12, 4.76e-06, 1.78e-05, 5.57e-05, 0.000147, 0.000328, 0.00062, 0.001, 0.00141, 0.00182, 0.00228, 0.00286, 0.00367, 0.00476, 0.00614, 0.00782, 0.00974, 0.0118, 0.0141, 0.0165, 0.0193, 0.0225], [2.78e-20, 9.67e-17, 1.15e-13, 1.77e-06, 7.63e-06, 2.68e-05, 7.74e-05, 0.000184, 0.000364, 0.000605, 0.000864, 0.00113, 0.00143, 0.00181, 0.00236, 0.00311, 0.00409, 0.0053, 0.0067, 0.00823, 0.00988, 0.0117, 0.0138, 0.0162], [5.6e-22, 4.05e-18, 9.18e-15, 6.67e-07, 3.33e-06, 1.32e-05, 4.14e-05, 0.000105, 0.000216, 0.000369, 0.000537, 0.000709, 0.000904, 0.00116, 0.00153, 0.00205, 0.00275, 0.00361, 0.00463, 0.00575, 0.00697, 0.00834, 0.00989, 0.0117], [1.13e-23, 1.7e-19, 7.33e-16, 2.56e-07, 1.48e-06, 6.56e-06, 2.24e-05, 6.02e-05, 0.000129, 0.000227, 0.000336, 0.000449, 0.000578, 0.000751, 0.00101, 0.00137, 0.00186, 0.00248, 0.00321, 0.00403, 0.00493, 0.00594, 0.0071, 0.00846], [2.28e-25, 7.1e-21, 5.85e-17, 9.9e-08, 6.66e-07, 3.31e-06, 1.23e-05, 3.49e-05, 7.79e-05, 0.00014, 0.000211, 0.000286, 0.000373, 0.000489, 0.000664, 0.000915, 0.00126, 0.0017, 0.00224, 0.00284, 0.0035, 0.00424, 0.0051, 0.00611], [4.59e-27, 2.97e-22, 4.67e-18, 3.87e-08, 3.02e-07, 1.69e-06, 6.79e-06, 2.04e-05, 4.72e-05, 8.72e-05, 0.000134, 0.000183, 0.000241, 0.00032, 0.00044, 0.000616, 0.00086, 0.00118, 0.00156, 0.002, 0.00248, 0.00303, 0.00366, 0.00442], [9.26e-29, 1.25e-23, 3.73e-19, 1.52e-08, 1.38e-07, 8.67e-07, 3.78e-06, 1.2e-05, 2.87e-05, 5.44e-05, 8.48e-05, 0.000118, 0.000157, 0.000211, 0.000294, 0.000416, 0.000589, 0.000816, 0.00109, 0.00141, 0.00176, 0.00216, 0.00263, 0.00319], [1.87e-30, 5.21e-25, 2.98e-20, 6.03e-09, 6.38e-08, 4.48e-07, 2.11e-06, 7.05e-06, 1.75e-05, 3.4e-05, 5.4e-05, 7.62e-05, 0.000103, 0.00014, 0.000197, 0.000282, 0.000404, 0.000566, 0.000766, 0.000995, 0.00125, 0.00155, 0.00189, 0.00231], [3.76e-32, 2.18e-26, 2.38e-21, 2.4e-09, 2.96e-08, 2.33e-07, 1.19e-06, 4.17e-06, 1.07e-05, 2.13e-05, 3.45e-05, 4.93e-05, 6.73e-05, 9.26e-05, 0.000132, 0.000192, 0.000278, 0.000394, 0.000538, 0.000703, 0.000891, 0.00111, 0.00136, 0.00167], [7.59e-34, 9.14e-28, 1.9e-22, 9.57e-10, 1.38e-08, 1.22e-07, 6.71e-07, 2.48e-06, 6.59e-06, 1.34e-05, 2.2e-05, 3.2e-05, 4.42e-05, 6.16e-05, 8.9e-05, 0.000131, 0.000192, 0.000274, 0.000378, 0.000498, 0.000634, 0.000792, 0.000978, 0.00121], [1.53e-35, 3.83e-29, 1.51e-23, 3.83e-10, 6.44e-09, 6.39e-08, 3.8e-07, 1.47e-06, 4.05e-06, 8.42e-06, 1.41e-05, 2.08e-05, 2.91e-05, 4.11e-05, 6.01e-05, 8.94e-05, 0.000132, 0.000191, 0.000265, 0.000352, 0.000451, 0.000567, 0.000704, 0.000872], [3.08e-37, 1.6e-30, 1.21e-24, 1.54e-10, 3.02e-09, 3.37e-08, 2.16e-07, 8.78e-07, 2.49e-06, 5.3e-06, 9.04e-06, 1.35e-05, 1.92e-05, 2.75e-05, 4.07e-05, 6.12e-05, 9.15e-05, 0.000133, 0.000187, 0.000249, 0.000321, 0.000405, 0.000506, 0.000631], [6.22e-39, 6.72e-32, 9.64e-26, 6.18e-11, 1.42e-09, 1.78e-08, 1.23e-07, 5.24e-07, 1.54e-06, 3.34e-06, 5.8e-06, 8.83e-06, 1.27e-05, 1.84e-05, 2.76e-05, 4.19e-05, 6.33e-05, 9.3e-05, 0.000131, 0.000176, 0.000229, 0.00029, 0.000364, 0.000456], [1.25e-40, 2.81e-33, 7.69e-27, 2.49e-11, 6.69e-10, 9.39e-09, 6.99e-08, 3.13e-07, 9.47e-07, 2.11e-06, 3.73e-06, 5.76e-06, 8.41e-06, 1.23e-05, 1.87e-05, 2.87e-05, 4.39e-05, 6.5e-05, 9.23e-05, 0.000125, 0.000163, 0.000208, 0.000262, 0.00033], [2.53e-42, 1.18e-34, 6.14e-28, 1e-11, 3.16e-10, 4.98e-09, 3.99e-08, 1.87e-07, 5.84e-07, 1.33e-06, 2.39e-06, 3.76e-06, 5.57e-06, 8.27e-06, 1.27e-05, 1.97e-05, 3.04e-05, 4.54e-05, 6.5e-05, 8.85e-05, 0.000116, 0.000149, 0.000188, 0.000238], [5.1e-44, 4.93e-36, 4.9e-29, 4.05e-12, 1.49e-10, 2.64e-09, 2.28e-08, 1.12e-07, 3.61e-07, 8.39e-07, 1.54e-06, 2.46e-06, 3.69e-06, 5.56e-06, 8.63e-06, 1.36e-05, 2.11e-05, 3.17e-05, 4.58e-05, 6.27e-05, 8.25e-05, 0.000106, 0.000135, 0.000172], [1.03e-45, 2.07e-37, 3.91e-30, 1.63e-12, 7.06e-11, 1.4e-09, 1.31e-08, 6.73e-08, 2.23e-07, 5.3e-07, 9.9e-07, 1.6e-06, 2.45e-06, 3.74e-06, 5.87e-06, 9.32e-06, 1.46e-05, 2.22e-05, 3.22e-05, 4.44e-05, 5.88e-05, 7.61e-05, 9.73e-05, 0.000125], [2.07e-47, 8.65e-39, 3.12e-31, 6.6e-13, 3.35e-11, 7.47e-10, 7.48e-09, 4.03e-08, 1.38e-07, 3.35e-07, 6.37e-07, 1.05e-06, 1.63e-06, 2.51e-06, 4e-06, 6.41e-06, 1.01e-05, 1.55e-05, 2.27e-05, 3.14e-05, 4.18e-05, 5.44e-05, 7e-05, 9.01e-05], [4.18e-49, 3.62e-40, 2.49e-32, 2.67e-13, 1.59e-11, 3.98e-10, 4.29e-09, 2.42e-08, 8.52e-08, 2.12e-07, 4.1e-07, 6.87e-07, 1.08e-06, 1.69e-06, 2.72e-06, 4.41e-06, 7.04e-06, 1.09e-05, 1.6e-05, 2.23e-05, 2.98e-05, 3.9e-05, 5.04e-05, 6.51e-05], [8.42e-51, 1.52e-41, 1.99e-33, 1.08e-13, 7.53e-12, 2.12e-10, 2.46e-09, 1.45e-08, 5.27e-08, 1.34e-07, 2.64e-07, 4.49e-07, 7.17e-07, 1.14e-06, 1.86e-06, 3.04e-06, 4.89e-06, 7.6e-06, 1.13e-05, 1.58e-05, 2.12e-05, 2.79e-05, 3.62e-05, 4.71e-05], [1.7e-52, 6.35e-43, 1.59e-34, 4.37e-14, 3.57e-12, 1.13e-10, 1.41e-09, 8.72e-09, 3.26e-08, 8.45e-08, 1.7e-07, 2.94e-07, 4.77e-07, 7.68e-07, 1.27e-06, 2.09e-06, 3.4e-06, 5.32e-06, 7.93e-06, 1.12e-05, 1.51e-05, 2e-05, 2.6e-05, 3.41e-05], [3.42e-54, 2.66e-44, 1.27e-35, 1.77e-14, 1.7e-12, 6.03e-11, 8.1e-10, 5.24e-09, 2.01e-08, 5.34e-08, 1.09e-07, 1.92e-07, 3.17e-07, 5.18e-07, 8.63e-07, 1.44e-06, 2.36e-06, 3.72e-06, 5.58e-06, 7.92e-06, 1.08e-05, 1.43e-05, 1.87e-05, 2.46e-05], [1.14e-62, 3.43e-51, 4.11e-41, 1.93e-16, 4.12e-14, 2.63e-12, 5.07e-11, 4.1e-10, 1.83e-09, 5.39e-09, 1.21e-08, 2.32e-08, 4.13e-08, 7.23e-08, 1.28e-07, 2.24e-07, 3.82e-07, 6.25e-07, 9.69e-07, 1.41e-06, 1.97e-06, 2.68e-06, 3.6e-06, 4.87e-06], [3.8e-71, 4.41e-58, 1.33e-46, 2.11e-18, 1e-15, 1.15e-13, 3.19e-12, 3.22e-11, 1.66e-10, 5.45e-10, 1.34e-09, 2.8e-09, 5.39e-09, 1.01e-08, 1.9e-08, 3.49e-08, 6.2e-08, 1.05e-07, 1.68e-07, 2.53e-07, 3.61e-07, 5.04e-07, 6.94e-07, 9.61e-07]], "rc_density_basis": 2.35};
+
+const els = {
+  facilityName: document.getElementById('facilityName'),
+  roomName: document.getElementById('roomName'),
+  deviceName: document.getElementById('deviceName'),
+  authorInfo: document.getElementById('authorInfo'),
+  reportLimit: document.getElementById('reportLimit'),
+  kvp: document.getElementById('kvp'),
+  workdays: document.getElementById('workdays'),
+  weeks: document.getElementById('weeksPer3mo'),
+  khead: document.getElementById('khead'),
+  kbody: document.getElementById('kbody'),
+  bodyfactor: document.getElementById('bodyfactor'),
+  rcdensity: document.getElementById('rcdensity'),
+  dlpHead: document.getElementById('dlpHead'),
+  countHead: document.getElementById('countHead'),
+  dlpBody: document.getElementById('dlpBody'),
+  countBody: document.getElementById('countBody'),
+  dlpSummary: document.getElementById('dlpSummary'),
+  pointsBody: document.getElementById('pointsBody'),
+  summaryStrip: document.getElementById('summaryStrip'),
+  saveLabel: document.getElementById('saveLabel'),
+  savesList: document.getElementById('savesList'),
+  importExcel: document.getElementById('importExcel'),
+  excelFile: document.getElementById('excelFile'),
+  importStatus: document.getElementById('importStatus'),
+};
+
+// ---- populate kVp select ----
+// 25/30/35kVpはマンモグラフィ用(Mo陽極/Moフィルタ)の空気カーマ・換算係数であり
+// 通常のCT(50〜150kVp)には適用しないため選択肢から除外する（テーブル自体には保持）
+TABLE.kvps.filter(k=>k>=50).forEach((k)=>{
+  const opt = document.createElement('option');
+  opt.value = k; opt.textContent = k + ' kVp';
+  if(k === 120) opt.selected = true;
+  els.kvp.appendChild(opt);
+});
+
+const LIMIT_PRESETS = [
+  {key:'kanri', label:'管理区域境界（1.3mSv/3月）', value:1300},
+  {key:'byoshitsu', label:'病室（1.3mSv/3月）', value:1300},
+  {key:'kyoju', label:'敷地内居住区域（250µSv/3月）', value:250},
+  {key:'shikichi', label:'敷地境界（250µSv/3月）', value:250},
+  {key:'custom', label:'カスタム', value:null},
+];
+
+let rowId = 0;
+let rows = [];
+
+function newRow(preset){
+  rowId += 1;
+  return Object.assign({
+    id: rowId,
+    face: 'A',
+    pointNo: '',
+    name: '',
+    direction: 'other',
+    distance: 3.0,
+    pb: 0,
+    rc: 20,
+    U: 1.0,
+    T: 1.0,
+    limitKey: 'kanri',
+    limitCustom: 1300,
+  }, preset || {});
+}
+
+function rowLabel(row){
+  const f = (row.face||'').trim();
+  const p = (row.pointNo||'').toString().trim();
+  if(f && p) return f + '面' + p;
+  if(f) return f + '面';
+  if(row.name) return row.name;
+  return p || '(未設定)';
+}
+
+const FACE_ORDER = ['A','B','C','D','E','F','病室','居住区域','敷地境界'];
+function faceSortIndex(face){
+  const i = FACE_ORDER.indexOf((face||'').trim());
+  return i>=0 ? i : FACE_ORDER.length + (face||'').trim().charCodeAt(0)||9999;
+}
+
+// ---- log-linear interpolation on a thickness table ----
+function interpTransmission(thicknessArr, valueArr, x){
+  const n = thicknessArr.length;
+  if(x <= thicknessArr[0]) return {value: valueArr[0], extrapolated:false};
+  if(x >= thicknessArr[n-1]){
+    // extrapolate using slope of last two points in log space
+    const x0=thicknessArr[n-2], x1=thicknessArr[n-1];
+    const y0=Math.log(valueArr[n-2]), y1=Math.log(valueArr[n-1]);
+    const slope = (y1-y0)/(x1-x0);
+    const y = y1 + slope*(x-x1);
+    return {value: Math.exp(y), extrapolated: true};
+  }
+  for(let i=0;i<n-1;i++){
+    if(x>=thicknessArr[i] && x<=thicknessArr[i+1]){
+      const x0=thicknessArr[i], x1=thicknessArr[i+1];
+      const y0=Math.log(valueArr[i]), y1=Math.log(valueArr[i+1]);
+      const t=(x-x0)/(x1-x0);
+      const y=y0+(y1-y0)*t;
+      return {value: Math.exp(y), extrapolated:false};
+    }
+  }
+  return {value: valueArr[n-1], extrapolated:true};
+}
+
+function getKvpColIndex(){
+  const k = parseFloat(els.kvp.value);
+  return TABLE.kvps.indexOf(k);
+}
+
+function getPbTransmission(mmPb){
+  const col = getKvpColIndex();
+  const vals = TABLE.pb_matrix.map(r=>r[col]);
+  return interpTransmission(TABLE.pb_th_mm, vals, mmPb);
+}
+function getRcTransmission(mmRc){
+  const col = getKvpColIndex();
+  const vals = TABLE.rc_matrix.map(r=>r[col]);
+  return interpTransmission(TABLE.rc_th_mm, vals, mmRc);
+}
+function getEKa(){
+  const col = getKvpColIndex();
+  return TABLE.eka[col];
+}
+
+function dlp3mo(dlpPerExam, countPerDay){
+  const days = parseFloat(els.workdays.value)||0;
+  const weeks = parseFloat(els.weeks.value)||0;
+  return dlpPerExam * countPerDay * days * weeks;
+}
+
+function updateDlpSummary(){
+  const h = dlp3mo(parseFloat(els.dlpHead.value)||0, parseFloat(els.countHead.value)||0);
+  const b = dlp3mo(parseFloat(els.dlpBody.value)||0, parseFloat(els.countBody.value)||0);
+  els.dlpSummary.innerHTML =
+    `3ヶ月間の総DLP　頭部: ${h.toLocaleString(undefined,{maximumFractionDigits:0})} mGy・cm/3ヶ月　`+
+    `｜　体幹部: ${b.toLocaleString(undefined,{maximumFractionDigits:0})} mGy・cm/3ヶ月`;
+}
+
+function fmtSci(v){
+  if(v===0) return '0';
+  const exp = Math.floor(Math.log10(Math.abs(v)));
+  const mant = v/Math.pow(10,exp);
+  return mant.toFixed(2)+'E'+(exp>=0?'+':'')+exp;
+}
+
+function computeRow(row){
+  const f = row.direction === 'gantry' ? 0.1 : (row.direction === 'couch' ? 0.4 : 1.0);
+  const khead = parseFloat(els.khead.value);
+  const kbody = parseFloat(els.kbody.value);
+  const bodyFactor = parseFloat(els.bodyfactor.value);
+  const rcDensity = parseFloat(els.rcdensity.value) || 2.10;
+
+  const dlpH = dlp3mo(parseFloat(els.dlpHead.value)||0, parseFloat(els.countHead.value)||0);
+  const dlpB = dlp3mo(parseFloat(els.dlpBody.value)||0, parseFloat(els.countBody.value)||0);
+
+  const d = parseFloat(row.distance);
+  const dSafe = (d && d>0) ? d : 0.001;
+
+  const KsecHead = khead * f * dlpH * Math.pow(1/dSafe,2);
+  const KsecBody = bodyFactor * kbody * f * dlpB * Math.pow(1/dSafe,2);
+
+  const pbMm = parseFloat(row.pb)||0;
+  const rcCm = parseFloat(row.rc)||0;
+  // 表3（医政発0331第16号）はコンクリート密度2.35 g/cm3基準。
+  // 等価厚さ = 適用密度 / 2.35 × 実厚さ（通知本文の換算式）
+  const rcMmEquivalent = rcCm*10 * (rcDensity/2.35);
+
+  const pbT = getPbTransmission(pbMm);
+  const rcT = getRcTransmission(rcMmEquivalent);
+  const Dt = pbT.value * rcT.value;
+
+  const EKa = getEKa();
+  const U = parseFloat(row.U)||0;
+  const T = parseFloat(row.T)||0;
+
+  const ES_uSv = (KsecHead + KsecBody) * Dt * EKa * U * T * 1000;
+
+  const preset = LIMIT_PRESETS.find(p=>p.key===row.limitKey);
+  const limit = row.limitKey==='custom' ? (parseFloat(row.limitCustom)||0) : preset.value;
+  const ratio = limit>0 ? (ES_uSv/limit*100) : null;
+
+  return {KsecHead, KsecBody, Dt, ES_uSv, limit, ratio, f,
+          extrapolated: pbT.extrapolated || rcT.extrapolated,
+          invalidDistance: !(d && d>0)};
+}
+
+function captureFocusState(){
+  const active = document.activeElement;
+  if(!active || !els.pointsBody.contains(active)) return null;
+  const tr = active.closest('tr[data-row-id]');
+  if(!tr) return null;
+  const state = { rowId: tr.dataset.rowId, field: active.dataset.f };
+  try{
+    if(typeof active.selectionStart === 'number'){
+      state.selStart = active.selectionStart;
+      state.selEnd = active.selectionEnd;
+    }
+  }catch(e){ /* some input types (e.g. number) don't support selection APIs */ }
+  return state;
+}
+function restoreFocusState(state){
+  if(!state) return;
+  const tr = els.pointsBody.querySelector(`tr[data-row-id="${state.rowId}"]`);
+  if(!tr) return;
+  const inp = tr.querySelector(`[data-f="${state.field}"]`);
+  if(!inp) return;
+  inp.focus();
+  if(state.selStart!=null){
+    try{ inp.setSelectionRange(state.selStart, state.selEnd); }catch(e){}
+  }
+}
+
+function render(){
+  const focusState = captureFocusState();
+  updateDlpSummary();
+  els.pointsBody.innerHTML='';
+  if(rows.length===0){
+    els.pointsBody.innerHTML = `<tr><td colspan="16" class="empty-note">評価点がありません。「＋ 評価点を追加」から作成してください。</td></tr>`;
+  }
+  let maxRatio = -1, esValues=[];
+
+  // group rows by face, preserving overall face order (A,B,C,D,E,F,病室,居住区域,敷地境界,その他...)
+  const faceKeys = [...new Set(rows.map(r=>(r.face||'').trim()))];
+  faceKeys.sort((a,b)=> faceSortIndex(a) - faceSortIndex(b) || a.localeCompare(b,'ja'));
+
+  const limitOptionsHtml = (row) => LIMIT_PRESETS.map(p=>
+    `<option value="${p.key}" ${row.limitKey===p.key?'selected':''}>${p.label}</option>`
+  ).join('');
+
+  faceKeys.forEach(faceKey=>{
+    const groupRows = rows.filter(r=>(r.face||'').trim()===faceKey)
+                           .sort((a,b)=> (a.pointNo||'').toString().localeCompare((b.pointNo||'').toString(), 'ja', {numeric:true}));
+
+    // group header row
+    const headerTr = document.createElement('tr');
+    headerTr.innerHTML = `<td colspan="16" style="background:#eef3f2;font-weight:700;font-size:12px;padding:7px 8px;color:var(--accent);">評価面：${escapeHtml(faceKey || '（未設定）')}　（${groupRows.length}点）</td>`;
+    els.pointsBody.appendChild(headerTr);
+
+    let groupMaxES = -1, groupMaxRow=null, groupLimit=Infinity;
+
+    groupRows.forEach(row=>{
+      const res = computeRow(row);
+      esValues.push(res.ES_uSv);
+      if(res.ratio!==null && res.ratio>maxRatio){ maxRatio=res.ratio; }
+      if(res.ES_uSv>groupMaxES){ groupMaxES=res.ES_uSv; groupMaxRow=row; }
+      if(res.limit < groupLimit) groupLimit = res.limit;
+
+      const tr = document.createElement('tr');
+      tr.dataset.rowId = row.id;
+      tr.innerHTML = `
+        <td><input type="text" data-f="face" value="${escapeHtml(row.face||'')}" placeholder="A" list="faceSuggestions" style="width:70px;"></td>
+        <td><input type="text" data-f="pointNo" value="${escapeHtml(row.pointNo||'')}" placeholder="1" style="width:60px;"></td>
+        <td>
+          <select data-f="direction">
+            <option value="other" ${row.direction==='other'?'selected':''}>その他（f=1.0）</option>
+            <option value="gantry" ${row.direction==='gantry'?'selected':''}>ガントリ方向（f=0.1）</option>
+            <option value="couch" ${row.direction==='couch'?'selected':''}>カウチ方向（f=0.4・参考値）</option>
+          </select>
+        </td>
+        <td>
+          <span class="badge" style="background:#eef1f4;color:var(--ink);font-family:var(--mono);">f=${res.f.toFixed(2)}</span>
+        </td>
+        <td><input type="text" inputmode="decimal" data-f="distance" value="${row.distance}" style="width:70px;"></td>
+        <td><input type="text" inputmode="decimal" data-f="pb" value="${row.pb}" style="width:70px;"></td>
+        <td><input type="text" inputmode="decimal" data-f="rc" value="${row.rc}" style="width:70px;"></td>
+        <td><input type="text" inputmode="decimal" data-f="U" value="${row.U}" style="width:60px;"></td>
+        <td><input type="text" inputmode="decimal" data-f="T" value="${row.T}" style="width:60px;"></td>
+        <td><select data-f="limitKey">${limitOptionsHtml(row)}</select></td>
+        <td>${row.limitKey==='custom'
+              ? `<input type="text" inputmode="decimal" data-f="limitCustom" value="${row.limitCustom}" style="width:70px;">`
+              : `<span style="font-family:var(--mono);">${res.limit}</span>`}</td>
+        <td style="font-family:var(--mono);">${fmtSci(res.Dt)}</td>
+        <td class="es-val">${res.ES_uSv.toLocaleString(undefined,{maximumFractionDigits:1})}
+          ${res.extrapolated?'<span title="表の範囲外を外挿しています" style="color:#b4472a;">⚠</span>':''}
+          ${res.invalidDistance?'<span title="距離を入力してください" style="color:#b4472a;">⚠d</span>':''}
+        </td>
+        <td>
+          <div class="bar-wrap"><div class="bar ${res.ratio>100?'ng':''}" style="width:${Math.min(100,res.ratio||0)}%;"></div></div>
+          <div style="font-family:var(--mono);font-size:11px;margin-top:2px;">${res.ratio!==null?res.ratio.toFixed(1)+'%':'-'}</div>
+        </td>
+        <td>${res.ratio===null?'':`<span class="badge ${res.ratio<=100?'ok':'ng'}">${res.ratio<=100?'OK':'NG'}</span>`}</td>
+        <td class="col-del"><button class="del-btn" data-del="${row.id}" title="この評価点を削除">✕</button></td>
+      `;
+      els.pointsBody.appendChild(tr);
+    });
+
+    // group summary row (worst-case point governs the face judgement)
+    if(groupRows.length>0){
+      const sumTr = document.createElement('tr');
+      const fit = groupMaxES<=groupLimit;
+      sumTr.innerHTML = `
+        <td colspan="11" style="text-align:right;font-weight:700;font-size:12px;background:#fbfcfd;">
+          評価面「${escapeHtml(faceKey||'（未設定）')}」最大値（${escapeHtml(rowLabel(groupMaxRow))}）
+        </td>
+        <td style="font-weight:700;background:#fbfcfd;"></td>
+        <td class="es-val" style="font-weight:700;background:#fbfcfd;">${groupMaxES.toLocaleString(undefined,{maximumFractionDigits:1})}</td>
+        <td style="background:#fbfcfd;"></td>
+        <td style="background:#fbfcfd;"><span class="badge ${fit?'ok':'ng'}">${fit?'OK':'NG'}</span></td>
+        <td class="col-del" style="background:#fbfcfd;"></td>
+      `;
+      els.pointsBody.appendChild(sumTr);
+    }
+  });
+
+  // wire inputs (by row id, safe under grouped/header rows)
+  els.pointsBody.querySelectorAll('tr').forEach(tr=>{
+    const id = tr.dataset.rowId;
+    if(!id) return;
+    const row = rows.find(r=>String(r.id)===String(id));
+    if(!row) return;
+    tr.querySelectorAll('[data-f]').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        row[inp.dataset.f] = inp.value;
+        render();
+      });
+      inp.addEventListener('change', ()=>{
+        row[inp.dataset.f] = inp.value;
+        render();
+      });
+    });
+    tr.querySelectorAll('[data-del]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        rows = rows.filter(r=>r.id!==row.id);
+        render();
+      });
+    });
+  });
+
+  // summary strip
+  const maxES = esValues.length ? Math.max(...esValues) : 0;
+  const ngCount = rows.filter(r=>{
+    const res=computeRow(r);
+    return res.ratio!==null && res.ratio>100;
+  }).length;
+  els.summaryStrip.innerHTML = `
+    <div class="stat"><div class="k">評価点数</div><div class="v">${rows.length}</div></div>
+    <div class="stat"><div class="k">評価面数</div><div class="v">${faceKeys.length}</div></div>
+    <div class="stat"><div class="k">最大 ES</div><div class="v">${maxES.toLocaleString(undefined,{maximumFractionDigits:1})} µSv/3ヶ月</div></div>
+    <div class="stat"><div class="k">限度超過点</div><div class="v ${ngCount>0?'warn':'ok'}">${ngCount} 点</div></div>
+    <div class="stat"><div class="k">選択kVp</div><div class="v">${els.kvp.value} kVp</div></div>
+  `;
+  restoreFocusState(focusState);
+}
+
+document.getElementById('addRow').addEventListener('click', ()=>{
+  rows.push(newRow());
+  render();
+});
+
+document.getElementById('clearRows').addEventListener('click', ()=>{
+  if(rows.length===0) return;
+  if(!confirm(`評価点を全て削除します（現在 ${rows.length} 点）。この操作は元に戻せません。よろしいですか？`)) return;
+  rows = [];
+  render();
+});
+
+document.getElementById('loadExample').addEventListener('click', ()=>{
+  els.dlpHead.value = 890; els.countHead.value = 15;
+  els.dlpBody.value = 750; els.countBody.value = 50;
+  els.workdays.value = 5; els.weeks.value = 13;
+  els.kvp.value = 120;
+  els.rcdensity.value = 2.10;
+  rows = [
+    newRow({face:'A', pointNo:'1', direction:'other', distance:3.8, pb:2.0, rc:0, U:1, T:1, limitKey:'kanri'}),
+    newRow({face:'A', pointNo:'2', direction:'other', distance:2.8, pb:2.0, rc:0, U:1, T:1, limitKey:'kanri'}),
+    newRow({face:'A', pointNo:'3', direction:'gantry', distance:2.5, pb:0, rc:20, U:1, T:1, limitKey:'kanri'}),
+    newRow({face:'A', pointNo:'4', direction:'other', distance:3.5, pb:0, rc:20, U:1, T:1, limitKey:'kanri'}),
+  ];
+  render();
+});
+
+document.getElementById('exportCsv').addEventListener('click', ()=>{
+  const header = ['評価点','方向','距離d(m)','Pb厚(mmPb)','RC厚(cm)','U','T','限度区分','限度(uSv/3mo)','Dt','ES(uSv/3mo)','対限度比(%)','判定'];
+  const lines = [header.join(',')];
+  rows.forEach(row=>{
+    const res = computeRow(row);
+    const preset = LIMIT_PRESETS.find(p=>p.key===row.limitKey);
+    const dirLabel = row.direction==='gantry'?'ガントリ方向':(row.direction==='couch'?'カウチ方向':'その他');
+    lines.push([
+      rowLabel(row), dirLabel, row.distance, row.pb, row.rc, row.U, row.T,
+      preset.label, res.limit, res.Dt.toExponential(3), res.ES_uSv.toFixed(2),
+      res.ratio!==null?res.ratio.toFixed(1):'', res.ratio<=100?'OK':'NG'
+    ].join(','));
+  });
+  const blob = new Blob(["\uFEFF"+lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'CT室遮へい計算結果.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+[els.kvp, els.workdays, els.weeks, els.khead, els.kbody, els.bodyfactor, els.rcdensity,
+ els.dlpHead, els.countHead, els.dlpBody, els.countBody].forEach(el=>{
+  el.addEventListener('input', render);
+  el.addEventListener('change', render);
+});
+
+// ---------------------------------------------------------------
+// 保存・履歴（localStorage：この端末のブラウザ内のみ。外部送信なし）
+// ---------------------------------------------------------------
+const STORAGE_KEY = 'ct_shield_tool_saves_v1';
+let storageAvailable = true;
+try{
+  const t='__ct_shield_test__';
+  window.localStorage.setItem(t,'1');
+  window.localStorage.removeItem(t);
+}catch(e){
+  storageAvailable = false;
+}
+
+function loadSaves(){
+  if(!storageAvailable) return [];
+  try{
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+function persistSaves(list){
+  if(!storageAvailable) return;
+  try{
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }catch(e){
+    alert('保存に失敗しました（ブラウザのストレージ容量制限の可能性があります）。');
+  }
+}
+function currentSettings(){
+  return {
+    kvp: els.kvp.value, workdays: els.workdays.value, weeks: els.weeks.value,
+    khead: els.khead.value, kbody: els.kbody.value, bodyfactor: els.bodyfactor.value,
+    rcdensity: els.rcdensity.value,
+    dlpHead: els.dlpHead.value, countHead: els.countHead.value,
+    dlpBody: els.dlpBody.value, countBody: els.countBody.value,
+  };
+}
+function applySettings(s){
+  els.kvp.value = s.kvp; els.workdays.value = s.workdays; els.weeks.value = s.weeks;
+  els.khead.value = s.khead; els.kbody.value = s.kbody; els.bodyfactor.value = s.bodyfactor;
+  els.rcdensity.value = s.rcdensity;
+  els.dlpHead.value = s.dlpHead; els.countHead.value = s.countHead;
+  els.dlpBody.value = s.dlpBody; els.countBody.value = s.countBody;
+}
+function fmtDateTime(iso){
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function renderSavesList(){
+  const saves = loadSaves().sort((a,b)=> b.savedAt.localeCompare(a.savedAt));
+  if(!storageAvailable){
+    els.savesList.innerHTML = `<div class="empty-note">このブラウザではローカル保存が利用できません（プライベートブラウジング等の制限の可能性があります）。</div>`;
+    return;
+  }
+  if(saves.length===0){
+    els.savesList.innerHTML = `<div class="empty-note">保存された履歴はまだありません。</div>`;
+    return;
+  }
+  els.savesList.innerHTML = `
+    <table class="evalpoints" style="margin-top:8px;">
+      <thead><tr>
+        <th class="col-narrow2">保存日時</th>
+        <th class="col-name">保存名</th>
+        <th class="col-narrow2">評価点数</th>
+        <th></th>
+      </tr></thead>
+      <tbody>
+        ${saves.map(s=>`
+          <tr>
+            <td style="font-family:var(--mono);white-space:nowrap;">${fmtDateTime(s.savedAt)}</td>
+            <td>${s.label ? s.label.replace(/</g,'&lt;') : '<span style="color:#8b96a3;">(無題)</span>'}</td>
+            <td style="font-family:var(--mono);">${s.rows.length}</td>
+            <td style="white-space:nowrap;">
+              <button data-load="${s.id}" style="padding:5px 10px;font-size:11.5px;">読込</button>
+              <button data-remove="${s.id}" style="padding:5px 10px;font-size:11.5px;color:var(--warn);">削除</button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+  els.savesList.querySelectorAll('[data-load]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.load;
+      const s = loadSaves().find(x=>x.id===id);
+      if(!s) return;
+      applySettings(s.settings);
+      rowId = 0;
+      rows = s.rows.map(r=>{
+        const clone = Object.assign({}, r);
+        delete clone.id;
+        return newRow(clone);
+      });
+      render();
+    });
+  });
+  els.savesList.querySelectorAll('[data-remove]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(!confirm('この保存データを削除しますか？（元に戻せません）')) return;
+      const id = btn.dataset.remove;
+      persistSaves(loadSaves().filter(x=>x.id!==id));
+      renderSavesList();
+    });
+  });
+}
+
+function defaultSaveLabel(){
+  const facility = els.facilityName.value.trim();
+  const room = els.roomName.value.trim();
+  return [facility, room].filter(Boolean).join(' ');
+}
+
+document.getElementById('saveSnapshot').addEventListener('click', ()=>{
+  if(!storageAvailable){
+    alert('このブラウザではローカル保存が利用できません。');
+    return;
+  }
+  const label = els.saveLabel.value.trim() || defaultSaveLabel();
+  const snapshot = {
+    id: 'save_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
+    savedAt: new Date().toISOString(),
+    label: label,
+    settings: currentSettings(),
+    rows: rows.map(r=> Object.assign({}, r)),
+  };
+  const saves = loadSaves();
+  saves.push(snapshot);
+  persistSaves(saves);
+  els.saveLabel.value = defaultSaveLabel();
+  delete els.saveLabel.dataset.userEdited;
+  renderSavesList();
+});
+
+// keep the save-name field pre-filled with the facility name until the user types their own label
+[els.facilityName, els.roomName].forEach(el=>{
+  el.addEventListener('input', ()=>{
+    if(!els.saveLabel.dataset.userEdited){
+      els.saveLabel.value = defaultSaveLabel();
+    }
+  });
+});
+els.saveLabel.addEventListener('input', ()=>{
+  els.saveLabel.dataset.userEdited = '1';
+});
+
+document.getElementById('importExcel').addEventListener('click', ()=>{
+  els.excelFile.value = '';
+  els.excelFile.click();
+});
+
+els.excelFile.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  if(typeof XLSX === 'undefined'){
+    showImportStatus('Excel読み込みライブラリの取得に失敗しました。インターネット接続を確認してください。', true);
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (evt)=>{
+    try{
+      const data = new Uint8Array(evt.target.result);
+      const wb = XLSX.read(data, {type:'array'});
+      const found = [];
+      wb.SheetNames.forEach(sheetName=>{
+        const sheet = wb.Sheets[sheetName];
+        const rows2d = XLSX.utils.sheet_to_json(sheet, {header:1, defval:null});
+        if(!rows2d || rows2d.length===0) return;
+        let headerIdx=-1, colSrc=-1, colPoint=-1, colDist=-1;
+        for(let i=0;i<Math.min(rows2d.length,10);i++){
+          const row = rows2d[i].map(v=> (v==null?'':String(v).trim()));
+          const iSrc = row.indexOf('線源名');
+          const iPoint = row.indexOf('測定点');
+          const iDist = row.findIndex(v=>v.indexOf('距離')===0);
+          if(iSrc>=0 && iPoint>=0 && iDist>=0){
+            headerIdx=i; colSrc=iSrc; colPoint=iPoint; colDist=iDist; break;
+          }
+        }
+        if(headerIdx<0) return;
+        for(let i=headerIdx+1;i<rows2d.length;i++){
+          const row = rows2d[i];
+          if(!row) continue;
+          const src = row[colSrc];
+          const point = row[colPoint];
+          const distMm = parseFloat(row[colDist]);
+          if(src==null || point==null || isNaN(distMm)) continue;
+          found.push({ source: String(src).trim(), label: String(point).trim(), distance_m: distMm/1000, sheet: sheetName });
+        }
+      });
+
+      if(found.length===0){
+        showImportStatus('「線源名」「測定点」「距離_mm」を含む表が見つかりませんでした。DXF距離計算ツールの出力形式（例：計算平面図DXF_距離計算結果.xlsx）をご確認ください。', true);
+        return;
+      }
+
+      const sources = [...new Set(found.map(f=>f.source))];
+      let chosenSource = sources[0];
+      if(sources.length>1){
+        const answer = window.prompt(`複数の線源名が見つかりました：${sources.join(', ')}\n読み込む線源名を入力してください。`, sources[0]);
+        if(answer===null) return;
+        chosenSource = answer.trim();
+        if(!sources.includes(chosenSource)){
+          showImportStatus(`線源名「${chosenSource}」は見つかりませんでした。読み込みを中止しました。`, true);
+          return;
+        }
+      }
+
+      const points = found.filter(f=>f.source===chosenSource);
+      let updated=0, added=0;
+      points.forEach(pt=>{
+        const existing = rows.find(r=>String(r.pointNo||'').trim()===pt.label);
+        if(existing){
+          existing.distance = pt.distance_m;
+          updated++;
+        }else{
+          rows.push(newRow({ face:'', pointNo: pt.label, distance: pt.distance_m, direction:'other', pb:0, rc:0, U:1, T:1, limitKey:'kanri' }));
+          added++;
+        }
+      });
+      render();
+      showImportStatus(`線源「${chosenSource}」から ${points.length} 点を読み込みました（更新 ${updated} 件／新規追加 ${added} 件）。新規追加分は「評価面」が未設定（空欄）です。各行の「評価面」欄にA〜F等を入力してグループ分けし、鉛厚・RC厚・方向も入力してください。`, false);
+    }catch(err){
+      showImportStatus('ファイルの読み込みに失敗しました：' + err.message, true);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+function showImportStatus(msg, isError){
+  els.importStatus.style.display = 'block';
+  els.importStatus.style.color = isError ? 'var(--warn)' : 'var(--accent)';
+  els.importStatus.textContent = msg;
+}
+
+document.getElementById('exportWord').addEventListener('click', ()=>{
+  const html = buildWordReportHtml();
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fname = (els.facilityName.value.trim() || 'CT室') + '_' + (els.roomName.value.trim() || '遮蔽能力計算書');
+  a.href = url; a.download = fname.replace(/[\\/:*?"<>|]/g,'') + '.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function buildWordReportHtml(){
+  const facility = escapeHtml(els.facilityName.value.trim() || '（施設名未入力）');
+  const room = escapeHtml(els.roomName.value.trim() || '（診療室名未入力）');
+  const device = escapeHtml(els.deviceName.value.trim() || '（装置名未入力）');
+  const author = escapeHtml(els.authorInfo.value.trim());
+  const reportLimit = parseFloat(els.reportLimit.value) || 1300;
+  const kvpVal = els.kvp.value;
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月`;
+
+  const dlpHeadPerExam = parseFloat(els.dlpHead.value)||0;
+  const countHeadVal = parseFloat(els.countHead.value)||0;
+  const dlpBodyPerExam = parseFloat(els.dlpBody.value)||0;
+  const countBodyVal = parseFloat(els.countBody.value)||0;
+  const dlp3Head = dlp3mo(dlpHeadPerExam, countHeadVal);
+  const dlp3Body = dlp3mo(dlpBodyPerExam, countBodyVal);
+  const EKaVal = getEKa();
+
+  const condRows = [
+    ['エックス線診療室名', room, '', ''],
+    ['装置名', device, '', ''],
+    ['管電圧 kVp', kvpVal, 'E/Ka（Sv/Gy）', String(EKaVal)],
+    ['稼働日数（日/週）', els.workdays.value, '評価週数（週/3月）', els.weeks.value],
+    ['頭部：DLP（mGy・cm/検査）', String(dlpHeadPerExam), '頭部：検査件数（件/日）', String(countHeadVal)],
+    ['体幹部：DLP（mGy・cm/検査）', String(dlpBodyPerExam), '体幹部：検査件数（件/日）', String(countBodyVal)],
+    ['頭部：3月間の総DLP（mGy・cm/3月）', dlp3Head.toLocaleString(undefined,{maximumFractionDigits:0}), '体幹部：3月間の総DLP（mGy・cm/3月）', dlp3Body.toLocaleString(undefined,{maximumFractionDigits:0})],
+    ['k_head（cm⁻¹）', els.khead.value, 'k_body（cm⁻¹）', els.kbody.value],
+    ['体幹部補正係数', els.bodyfactor.value, 'コンクリート密度（g/cm³）', els.rcdensity.value],
+  ];
+  const condRowsHtml = condRows.map(r=>`
+    <tr>
+      <td class="lbl">${escapeHtml(r[0])}</td><td>${escapeHtml(r[1])}</td>
+      <td class="lbl">${escapeHtml(r[2])}</td><td>${escapeHtml(r[3])}</td>
+    </tr>`).join('');
+
+  const sortedRows = rows.slice().sort((a,b)=>
+    faceSortIndex(a.face) - faceSortIndex(b.face) ||
+    (a.face||'').localeCompare((b.face||''),'ja') ||
+    (a.pointNo||'').toString().localeCompare((b.pointNo||'').toString(),'ja',{numeric:true})
+  );
+  const resultRowsHtml = sortedRows.map(row=>{
+    const res = computeRow(row);
+    const dirLabel = row.direction==='gantry' ? 'ガントリ方向' : (row.direction==='couch' ? 'カウチ方向' : 'その他');
+    const fit = res.ES_uSv <= reportLimit ? '適合' : '要検討';
+    const fitColor = res.ES_uSv <= reportLimit ? '#e2efda' : '#fce4e4';
+    return `
+    <tr>
+      <td>${escapeHtml(rowLabel(row))}</td>
+      <td>${dirLabel}</td>
+      <td>${res.f !== undefined ? res.f.toFixed(2) : ''}</td>
+      <td>${parseFloat(row.pb).toFixed(1)}</td>
+      <td>${parseFloat(row.rc).toFixed(1)}</td>
+      <td>${parseFloat(row.distance).toFixed(1)}</td>
+      <td>${fmtSci(res.Dt)}</td>
+      <td>${res.ES_uSv.toLocaleString(undefined,{maximumFractionDigits:1})}</td>
+      <td>${reportLimit}</td>
+      <td style="background:${fitColor};">${fit}</td>
+    </tr>`;
+  }).join('');
+
+  return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+  <head>
+    <meta charset="utf-8">
+    <title>${facility} ${room} 遮蔽能力計算書</title>
+    <!--[if gte mso 9]>
+    <xml>
+      <w:WordDocument>
+        <w:View>Print</w:View>
+        <w:Zoom>100</w:Zoom>
+        <w:DoNotOptimizeForBrowser/>
+      </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+      @page { size: 21cm 29.7cm; margin: 2.2cm 2cm 2cm 2cm; }
+      body { font-family: "BIZ UDPGothic","MS Gothic",sans-serif; font-size: 10.5pt; color:#111; }
+      h1 { font-size: 20pt; text-align:center; margin: 60pt 0 6pt; }
+      h2 { font-size: 14pt; border-bottom: 2px solid #333; padding-bottom:4pt; margin-top: 20pt; }
+      h3 { font-size: 12pt; margin-top: 14pt; }
+      .cover-right { text-align:right; font-size:12pt; margin-bottom: 60pt; }
+      .cover-sub { text-align:center; font-size:13pt; margin:4pt 0; }
+      .cover-room { text-align:center; font-size:16pt; font-weight:bold; margin-top: 20pt; }
+      .cover-device { text-align:center; font-size:12pt; }
+      .cover-date { text-align:center; font-size:11pt; margin-top: 40pt; }
+      .cover-footer { text-align:center; font-size:10.5pt; margin-top: 160pt; line-height:1.9; }
+      table { border-collapse: collapse; width:100%; margin: 8pt 0 4pt; }
+      table.cond td { border: 1px solid #555; padding: 5pt 8pt; font-size: 10pt; }
+      table.cond td.lbl { background:#f2f2f2; font-weight:bold; width:22%; }
+      table.result th, table.result td { border: 1px solid #555; padding: 4pt 6pt; font-size: 9.5pt; text-align:center; }
+      table.result th { background:#dce6f1; font-weight:bold; }
+      .formula { font-family: Consolas, monospace; font-size: 10.5pt; margin: 6pt 0; }
+      .note { font-size: 9.5pt; color:#333; margin-top:8pt; }
+      .pagebreak { page-break-before: always; }
+      p { line-height: 1.7; }
+    </style>
+  </head>
+  <body>
+
+    <div class="cover-right">${facility}　様</div>
+    <h1>エックス線診療室遮蔽能力計算書</h1>
+    <div class="cover-sub">（Japanese-DLP法）</div>
+    <div class="cover-room">[ ${room} ]</div>
+    <div class="cover-device">(${device})</div>
+    <div class="cover-date">〔${dateStr}〕</div>
+    <div class="cover-footer">${author ? author.replace(/\n/g,'<br>') : ''}</div>
+
+    <div class="pagebreak"></div>
+    <h2>エックス線診療室の遮蔽能力計算書</h2>
+
+    <h3>（１）計算基準</h3>
+    <p>公益社団法人日本放射線技術学会　関係法令委員会「Ｘ線ＣＴ室の漏えい線量計算マニュアル　第1版」（2019年1月発行）に基づく。同マニュアルは、医政発0331第16号の補足資料として、CT室の漏えい線量評価に特化したDose Length Product（DLP）法（Japanese-DLP法、Watanabe法）を提案するものである。</p>
+
+    <h3>（２）計算方法</h3>
+    <p>① 散乱エックス線による漏えい線量の計算式</p>
+    <p class="formula">
+      Ksec(head) = k_head × f × DLP(head) × (1/d)²　［式1］<br>
+      Ksec(body) = 1.2 × k_body × f × DLP(body) × (1/d)²　［式2］<br>
+      ES = { Ksec(head) + Ksec(body) } × Dt × (E/Ka) × U × T　［式3］
+    </p>
+    <p>
+      Ksec(head)，Ksec(body)：計算点位置での散乱線量（空気カーマ、mGy/3月間）<br>
+      k_head，k_body：アイソセンターから1mでのビーム幅1cmあたりの散乱係数（cm⁻¹）<br>
+      f：吸収体補正係数。ガントリ方向は f＝0.1、カウチ方向は f＝0.4（参考値）、それ以外は f＝1.0<br>
+      DLP：3月間の総DLP値（mGy・cm/3月間）＝1検査あたりDLP×検査件数/日×稼働日数/週×週数/3月間<br>
+      d：アイソセンターから計算点までの距離（m）　　ES：漏えい実効線量（μSv/3月間）<br>
+      Dt：遮へい体の空気カーマ透過率（鉛・コンクリートの複合遮へいは各々の透過率の積）<br>
+      E/Ka：空気カーマから実効線量への換算係数（Sv/Gy）　U：使用係数　T：居住係数
+    </p>
+    <p>② 鉛・コンクリートの透過率、E/Ka値は、医政発0331第16号（平成26年3月31日）別紙３ 表２（鉛）・表３（コンクリート、密度2.35 g/cm³基準）・表10（E/Ka）を用い、対数線形補間により求めた。コンクリート密度が2.35 g/cm³と異なる場合は、通知本文の換算式（等価厚さ＝適用密度／2.35×実厚さ）により等価厚さへ換算した。</p>
+
+    <h3>（３）計算条件</h3>
+    <p style="font-weight:bold; margin:6pt 0 4pt;">施設名：${facility}</p>
+    <table class="cond">${condRowsHtml}</table>
+
+    <div class="pagebreak"></div>
+    <h2>計算結果</h2>
+    <table class="result">
+      <tr>
+        <th>評価点</th><th>方向</th><th>f</th><th>鉛(mm)</th><th>RC(cm)</th><th>距離d(m)</th>
+        <th>Dt（合成）</th><th>ES（μSv/3月）</th><th>実効線量限度（μSv/3月）</th><th>適合評価</th>
+      </tr>
+      ${resultRowsHtml}
+    </table>
+    <p class="note">実効線量限度は ${reportLimit} μSv/3ヶ月間として判定した。本計算書はJapanese-DLP法（散乱線のみを評価する簡易式）による概算であり、実際の届出等に用いる場合は一次資料および実測による最終確認を行うこと。</p>
+
+  </body>
+  </html>`;
+}
+
+// initial rows (matches user's stated defaults: head 1260 / body 940 DRL, blank distances for input)
+rows = [
+  newRow({name:'管理区域境界①', direction:'other', distance:3.0, pb:2.0, rc:0, limitKey:'kanri'}),
+  newRow({name:'ガントリ方向②', direction:'gantry', distance:2.5, pb:0, rc:17, limitKey:'kanri'}),
+  newRow({name:'敷地境界③', direction:'other', distance:10, pb:0, rc:17, limitKey:'shikichi'}),
+];
+render();
+renderSavesList();
+els.saveLabel.value = defaultSaveLabel();
+</script>
+</body>
+</html>
