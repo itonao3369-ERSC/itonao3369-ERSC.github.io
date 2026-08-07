@@ -79,19 +79,23 @@
     display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;
     padding-top:10px; border-top:1px dashed var(--line);
   }
-  table.evalpoints{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.evalpoints{ width:100%; border-collapse:collapse; font-size:11.5px; }
+  #pointsTable{ table-layout: fixed; }
   table.evalpoints th{
-    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;
-    color:var(--ink-soft); border-bottom:2px solid var(--line); padding:6px 6px; white-space:nowrap;
+    text-align:left; font-size:9.5px; text-transform:uppercase; letter-spacing:.02em;
+    color:var(--ink-soft); border-bottom:2px solid var(--line); padding:5px 3px;
+    white-space:normal; word-break:break-word; line-height:1.25;
   }
-  table.evalpoints td{ padding:5px 6px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.evalpoints td{ padding:3px 3px; border-bottom:1px solid var(--line); vertical-align:middle; overflow:hidden;}
   table.evalpoints th.col-del, table.evalpoints td.col-del{
     position: sticky; right: 0; background: var(--card);
     box-shadow: -6px 0 6px -6px rgba(0,0,0,0.15);
     text-align:center; z-index:2;
   }
   table.evalpoints tr:hover td.col-del{ background:#f8fafb; }
-  table.evalpoints input, table.evalpoints select{ font-size:12px; padding:5px 6px; }
+  #pointsTable input, #pointsTable select{
+    font-size:10.5px; padding:4px 2px; width:100%; min-width:0; box-sizing:border-box;
+  }
   table.evalpoints tr:hover td{ background:#f8fafb; }
   .col-name{ min-width:110px;}
   .col-narrow{ width:88px; }
@@ -102,10 +106,10 @@
   }
   .badge.ok{ background:var(--ok-soft); color:var(--ok); }
   .badge.ng{ background:var(--warn-soft); color:var(--warn); }
-  .bar-wrap{ width:84px; height:7px; border-radius:4px; background:#e7ebee; overflow:hidden; }
+  .bar-wrap{ width:100%; height:6px; border-radius:4px; background:#e7ebee; overflow:hidden; }
   .bar{ height:100%; background:var(--ok); }
   .bar.ng{ background:var(--warn); }
-  .es-val{ font-family:var(--mono); font-weight:700; }
+  .es-val{ font-family:var(--mono); font-weight:700; font-size:11px; }
   .toolbar{ display:flex; gap:10px; margin:14px 0 6px; flex-wrap:wrap; align-items:center; }
   button{
     font-family:var(--sans); font-size:12.5px; font-weight:600; border-radius:7px; border:1px solid var(--line);
@@ -268,6 +272,14 @@
         <option value="敷地境界">
       </datalist>
       <table class="evalpoints" id="pointsTable">
+        <colgroup>
+          <col style="width:48px;"><col style="width:44px;"><col style="width:92px;">
+          <col style="width:42px;"><col style="width:48px;"><col style="width:48px;">
+          <col style="width:48px;"><col style="width:32px;"><col style="width:32px;">
+          <col style="width:88px;"><col style="width:52px;"><col style="width:58px;">
+          <col style="width:64px;"><col style="width:50px;"><col style="width:42px;">
+          <col style="width:34px;">
+        </colgroup>
         <thead>
           <tr>
             <th class="col-narrow2">評価面</th>
@@ -393,10 +405,10 @@ TABLE.kvps.filter(k=>k>=50).forEach((k)=>{
 });
 
 const LIMIT_PRESETS = [
-  {key:'kanri', label:'管理区域境界（1.3mSv/3月）', value:1300},
-  {key:'byoshitsu', label:'病室（1.3mSv/3月）', value:1300},
-  {key:'kyoju', label:'敷地内居住区域（250µSv/3月）', value:250},
-  {key:'shikichi', label:'敷地境界（250µSv/3月）', value:250},
+  {key:'kanri', label:'管理区域境界', value:1300},
+  {key:'byoshitsu', label:'病室', value:1300},
+  {key:'kyoju', label:'居住区域', value:250},
+  {key:'shikichi', label:'敷地境界', value:250},
   {key:'custom', label:'カスタム', value:null},
 ];
 
@@ -606,35 +618,35 @@ function render(){
       const tr = document.createElement('tr');
       tr.dataset.rowId = row.id;
       tr.innerHTML = `
-        <td><input type="text" data-f="face" value="${escapeHtml(row.face||'')}" placeholder="A" list="faceSuggestions" style="width:70px;"></td>
-        <td><input type="text" data-f="pointNo" value="${escapeHtml(row.pointNo||'')}" placeholder="1" style="width:60px;"></td>
+        <td><input type="text" data-f="face" value="${escapeHtml(row.face||'')}" placeholder="A" list="faceSuggestions"></td>
+        <td><input type="text" data-f="pointNo" value="${escapeHtml(row.pointNo||'')}" placeholder="1"></td>
         <td>
           <select data-f="direction">
-            <option value="other" ${row.direction==='other'?'selected':''}>その他（f=1.0）</option>
-            <option value="gantry" ${row.direction==='gantry'?'selected':''}>ガントリ方向（f=0.1）</option>
-            <option value="couch" ${row.direction==='couch'?'selected':''}>カウチ方向（f=0.4・参考値）</option>
+            <option value="other" ${row.direction==='other'?'selected':''}>その他(f=1.0)</option>
+            <option value="gantry" ${row.direction==='gantry'?'selected':''}>ガントリ(f=0.1)</option>
+            <option value="couch" ${row.direction==='couch'?'selected':''}>カウチ(f=0.4)</option>
           </select>
         </td>
         <td>
-          <span class="badge" style="background:#eef1f4;color:var(--ink);font-family:var(--mono);">f=${res.f.toFixed(2)}</span>
+          <span class="badge" style="background:#eef1f4;color:var(--ink);font-family:var(--mono);padding:2px 5px;font-size:10px;">f=${res.f.toFixed(2)}</span>
         </td>
-        <td><input type="text" inputmode="decimal" data-f="distance" value="${row.distance}" style="width:70px;"></td>
-        <td><input type="text" inputmode="decimal" data-f="pb" value="${row.pb}" style="width:70px;"></td>
-        <td><input type="text" inputmode="decimal" data-f="rc" value="${row.rc}" style="width:70px;"></td>
-        <td><input type="text" inputmode="decimal" data-f="U" value="${row.U}" style="width:60px;"></td>
-        <td><input type="text" inputmode="decimal" data-f="T" value="${row.T}" style="width:60px;"></td>
+        <td><input type="text" inputmode="decimal" data-f="distance" value="${row.distance}"></td>
+        <td><input type="text" inputmode="decimal" data-f="pb" value="${row.pb}"></td>
+        <td><input type="text" inputmode="decimal" data-f="rc" value="${row.rc}"></td>
+        <td><input type="text" inputmode="decimal" data-f="U" value="${row.U}"></td>
+        <td><input type="text" inputmode="decimal" data-f="T" value="${row.T}"></td>
         <td><select data-f="limitKey">${limitOptionsHtml(row)}</select></td>
         <td>${row.limitKey==='custom'
-              ? `<input type="text" inputmode="decimal" data-f="limitCustom" value="${row.limitCustom}" style="width:70px;">`
-              : `<span style="font-family:var(--mono);">${res.limit}</span>`}</td>
-        <td style="font-family:var(--mono);">${fmtSci(res.Dt)}</td>
+              ? `<input type="text" inputmode="decimal" data-f="limitCustom" value="${row.limitCustom}">`
+              : `<span style="font-family:var(--mono);font-size:10.5px;">${res.limit}</span>`}</td>
+        <td style="font-family:var(--mono);font-size:10px;">${fmtSci(res.Dt)}</td>
         <td class="es-val">${res.ES_uSv.toLocaleString(undefined,{maximumFractionDigits:1})}
           ${res.extrapolated?'<span title="表の範囲外を外挿しています" style="color:#b4472a;">⚠</span>':''}
           ${res.invalidDistance?'<span title="距離を入力してください" style="color:#b4472a;">⚠d</span>':''}
         </td>
         <td>
           <div class="bar-wrap"><div class="bar ${res.ratio>100?'ng':''}" style="width:${Math.min(100,res.ratio||0)}%;"></div></div>
-          <div style="font-family:var(--mono);font-size:11px;margin-top:2px;">${res.ratio!==null?res.ratio.toFixed(1)+'%':'-'}</div>
+          <div style="font-family:var(--mono);font-size:9.5px;margin-top:2px;">${res.ratio!==null?res.ratio.toFixed(1)+'%':'-'}</div>
         </td>
         <td>${res.ratio===null?'':`<span class="badge ${res.ratio<=100?'ok':'ng'}">${res.ratio<=100?'OK':'NG'}</span>`}</td>
         <td class="col-del"><button class="del-btn" data-del="${row.id}" title="この評価点を削除">✕</button></td>
