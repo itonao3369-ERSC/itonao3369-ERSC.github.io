@@ -455,7 +455,7 @@
   <nav>
     <a href="#services">事業内容</a>
     <a href="products.html">開発システム</a>
-    <a href="ri_surface_check.html">🔬 表面汚染判定ツール</a>
+    <a href="ri_surface_check.html">🔬 測定ツール</a>
     <a href="#about">会社概要</a>
     <a href="#contact" class="cta-nav">✉ お問い合わせ</a>
   </nav>
@@ -630,12 +630,12 @@
       <table class="about-table">
         <tr><td>会社名</td><td id="d-name">エスエス技研株式会社</td></tr>
         <tr><td>英文名</td><td id="d-name-en">SS Giken Co., Ltd.</td></tr>
-        <tr><td>所在地</td><td id="d-address">〒462-0017<br>名古屋市北区落合町48-3</td></tr>
-        <tr><td>電話</td><td id="d-tel">052-902-8410</td></tr>
-        <tr><td>FAX</td><td id="d-fax">052-902-8415</td></tr>
+        <tr><td>所在地</td><td id="d-address">〒（郵便番号）<br>（住所）</td></tr>
+        <tr><td>電話</td><td id="d-tel">（電話番号）</td></tr>
+        <tr><td>FAX</td><td id="d-fax">（FAX番号）</td></tr>
         <tr><td>事業内容</td><td>放射線測定業、放射線管理業務、<br>放射線防護コンサルティング</td></tr>
         <tr><td>対応地域</td><td>全国（出張対応可）</td></tr>
-        <tr><td>資格・登録</td><td>作業環境測定機関登録<br>第1種放射線取扱主任者在籍<br>第1種作業環境測定士在籍</td></tr>
+        <tr><td>資格・登録</td><td>作業環境測定機関登録<br>放射線取扱主任者（第1種）在籍</td></tr>
       </table>
     </div>
     <div class="about-message">
@@ -643,7 +643,7 @@
         放射線は、医療や産業において欠かせない存在です。
         しかしその恩恵を安全に享受するためには、
         正確な測定と誠実な管理が不可欠です。
-        私たちエスエス技研は、専門知識と校正済機器をもって、
+        私たちエスエス技研は、専門知識と最新機器をもって、
         お客様の放射線安全を誠実に守り続けます。
       </blockquote>
       <cite id="d-message-author">— 代表取締役</cite>
@@ -663,46 +663,54 @@
       <div class="contact-detail">
         <div class="contact-detail-item">
           <div class="ic">📞</div>
-          <div><strong>お電話でのお問い合わせ</strong><span id="d-tel2">052-902-8410</span><br><span id="d-hours">平日 9:00〜18:00</span></div>
+          <div><strong>お電話でのお問い合わせ</strong><span id="d-tel2">（電話番号）</span><br><span id="d-hours">平日 9:00〜18:00</span></div>
         </div>
         <div class="contact-detail-item">
           <div class="ic">📠</div>
-          <div><strong>FAX</strong><span id="d-fax2">052-902-8415</span><br>24時間受付</div>
+          <div><strong>FAX</strong><span id="d-fax2">（FAX番号）</span><br>24時間受付</div>
         </div>
         <div class="contact-detail-item">
           <div class="ic">📍</div>
-          <div><strong>所在地</strong><span id="d-address2">名古屋市北区落合町48-3</span></div>
+          <div><strong>所在地</strong><span id="d-address2">（住所）</span></div>
         </div>
       </div>
     </div>
     <div class="contact-form">
       <h3>✉ メールフォーム</h3>
-      <div class="form-row">
-        <div class="form-group"><label>お名前<span class="req">*</span></label><input type="text" id="f-name" placeholder="山田 太郎"></div>
-        <div class="form-group"><label>会社・施設名</label><input type="text" id="f-org" placeholder="〇〇病院"></div>
+      <div id="form-success" style="display:none; text-align:center; padding:40px 20px;">
+        <div style="font-size:48px; margin-bottom:16px;">✅</div>
+        <h4 style="color:white; font-size:18px; margin-bottom:8px;">送信が完了しました</h4>
+        <p style="color:rgba(255,255,255,0.6); font-size:14px;">2営業日以内にご連絡いたします。</p>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>電話番号</label><input type="tel" id="f-tel" placeholder="03-XXXX-XXXX"></div>
-        <div class="form-group"><label>メールアドレス<span class="req">*</span></label><input type="email" id="f-email" placeholder="info@example.co.jp"></div>
+      <div id="form-body">
+        <div class="form-row">
+          <div class="form-group"><label>お名前<span class="req">*</span></label><input type="text" id="f-name" name="name" placeholder="山田 太郎"></div>
+          <div class="form-group"><label>会社・施設名</label><input type="text" id="f-org" name="organization" placeholder="〇〇病院"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>電話番号</label><input type="tel" id="f-tel" name="tel" placeholder="03-XXXX-XXXX"></div>
+          <div class="form-group"><label>メールアドレス<span class="req">*</span></label><input type="email" id="f-email" name="email" placeholder="info@example.co.jp"></div>
+        </div>
+        <div class="form-group">
+          <label>お問い合わせ種別<span class="req">*</span></label>
+          <select id="f-type" name="type">
+            <option value="">選択してください</option>
+            <option>作業環境測定のご依頼</option>
+            <option>漏洩線量測定のご依頼</option>
+            <option>施設管理・コンサルティングのご相談</option>
+            <option>放射線ソフトウェアについて</option>
+            <option>お見積りのご依頼</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>お問い合わせ内容<span class="req">*</span></label>
+          <textarea id="f-body" name="message" placeholder="ご依頼内容・施設の種別・測定の頻度など、詳しくお聞かせください。"></textarea>
+        </div>
+        <div id="form-error" style="display:none; color:#ff6b6b; font-size:13px; margin-bottom:12px;"></div>
+        <button class="form-submit" id="f-submit" onclick="submitForm()">送信する →</button>
+        <p class="form-note">※ご記入いただいた個人情報は、お問い合わせへの回答のみに使用し、第三者への提供は一切行いません。</p>
       </div>
-      <div class="form-group">
-        <label>お問い合わせ種別<span class="req">*</span></label>
-        <select id="f-type">
-          <option value="">選択してください</option>
-          <option>作業環境測定のご依頼</option>
-          <option>漏洩線量測定のご依頼</option>
-          <option>施設管理・コンサルティングのご相談</option>
-          <option>放射線ソフトウェアについて</option>
-          <option>お見積りのご依頼</option>
-          <option>その他</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>お問い合わせ内容<span class="req">*</span></label>
-        <textarea id="f-body" placeholder="ご依頼内容・施設の種別・測定の頻度など、詳しくお聞かせください。"></textarea>
-      </div>
-      <button class="form-submit" onclick="submitForm()">送信する →</button>
-      <p class="form-note">※ご記入いただいた個人情報は、お問い合わせへの回答のみに使用し、第三者への提供は一切行いません。</p>
     </div>
   </div>
 </section>
@@ -733,7 +741,7 @@
       <ul>
         <li><a href="#about">会社概要</a></li>
         <li><a href="products.html">開発システム</a></li>
-        <li><a href="ri_surface_check.html">🔬 表面汚染判定ツール</a></li>
+        <li><a href="ri_surface_check.html">🔬 測定ツール</a></li>
         <li><a href="#contact">お問い合わせ</a></li>
       </ul>
     </div>
@@ -785,21 +793,61 @@
     } catch(e) {}
   })();
 
-  // フォーム送信
-  function submitForm() {
+  // フォーム送信（Formspree）
+  async function submitForm() {
     const name  = document.getElementById('f-name').value.trim();
     const email = document.getElementById('f-email').value.trim();
     const type  = document.getElementById('f-type').value;
     const body  = document.getElementById('f-body').value.trim();
-    if (!name || !email || !type || !body) { alert('必須項目（*）をすべてご入力ください。'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('正しいメールアドレスを入力してください。'); return; }
-    const toast = document.getElementById('toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 4000);
-    ['f-name','f-org','f-tel','f-email','f-type','f-body'].forEach(id => {
-      const el = document.getElementById(id);
-      el.tagName === 'SELECT' ? el.selectedIndex = 0 : el.value = '';
-    });
+    const errEl = document.getElementById('form-error');
+
+    // バリデーション
+    errEl.style.display = 'none';
+    if (!name || !email || !type || !body) {
+      errEl.textContent = '必須項目（*）をすべてご入力ください。';
+      errEl.style.display = 'block'; return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.textContent = '正しいメールアドレスを入力してください。';
+      errEl.style.display = 'block'; return;
+    }
+
+    // 送信中
+    const btn = document.getElementById('f-submit');
+    btn.disabled = true;
+    btn.textContent = '送信中...';
+
+    try {
+      const res = await fetch('https://formspree.io/f/xgawdlbb', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name:         name,
+          email:        email,
+          organization: document.getElementById('f-org').value.trim(),
+          tel:          document.getElementById('f-tel').value.trim(),
+          type:         type,
+          message:      body,
+        })
+      });
+
+      if (res.ok) {
+        // 成功：フォームを非表示にして完了メッセージ表示
+        document.getElementById('form-body').style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } else {
+        const data = await res.json();
+        errEl.textContent = data.error || '送信に失敗しました。お電話またはFAXにてお問い合わせください。';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = '送信する →';
+      }
+    } catch(e) {
+      errEl.textContent = '通信エラーが発生しました。お電話またはFAXにてお問い合わせください。';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '送信する →';
+    }
   }
 
   // スムーズスクロール
